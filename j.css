@@ -1,0 +1,278 @@
+.Title_Main {
+    font-style: normal;
+    font-size: 4rem; /* Change font size */
+    text-align: center; /* Center the text */
+    margin-top: 50px; /* Adjust vertical margin */
+    color:rgb(var(--mdui-color-on-surface-variant));
+
+  }
+  .Title_Sub{
+    font-style: normal;
+    font-size: 1.5rem; /* Change font size */
+    text-align: center; /* Center the text */
+    margin-top: 50px; /* Adjust vertical margin */
+    color:rgb(var(--mdui-color-on-surface-variant))
+  }
+  .Title_Sub_No_Header{
+    font-style: normal;
+    font-size: 1.5rem; /* Change font size */
+    text-align: center; /* Center the text */
+    color:rgb(var(--mdui-color-on-surface-variant))
+  }
+  .Title_Button_Big {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中，如果需要 */
+    gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+    height: 100%;            /* 可选：让容器的高度和父元素相同 */
+}
+.Big_Button{
+    width: 10rem;
+    height: 4rem;
+    font-size: 1.1rem;
+}
+.Small_Button{
+    width: 10rem;
+    height: 2.5rem;
+    font-size: 0.8rem;
+}
+.Title_Button_Small {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中，如果需要 */
+    gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+    height: 100%;            /* 可选：让容器的高度和父元素相同 */
+}
+.Main_Card_List{
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中，如果需要 */
+    gap: 1rem;               /* 按钮之间的间距，可根据需要调整 */
+    height: 100rem%;            /* 可选：让容器的高度和父元素相同 */
+}
+.Main_Card{
+
+    display: flex;
+
+    height: 30rem;
+    width: 50rem;            /* 可选：让容器的高度和父元素相同 */
+}
+.Program_progress_bar{
+    width:50rem;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中，如果需要 */
+}
+.right_down{
+    margin:auto;
+    right:1rem;
+    bottom:1rem;
+    position:absolute;
+}
+#left_top{
+    margin:auto;
+    left:1rem;
+    top:1rem;
+    position:absolute;
+}
+.left_top_two{
+    margin-top: 4rem;
+    margin-left: 1rem;
+    display: flex;
+}
+.Title_Small{
+    font-style: normal;
+    font-size: 1rem; /* Change font size */
+    text-align: center; /* Center the text */
+    margin-top: 50px; /* Adjust vertical margin */
+    color:#FFFFFF;
+  }
+  .divider{
+    position: absolute;
+    width: calc(100% - 1rem);
+    height: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    bottom:10rem;
+  }
+  .copyright {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 4rem;
+    text-align: center;
+    margin: 0 auto;
+    pointer-events: none; /* 使 div 可穿透点击 */
+}
+.Netease_Login_Input{
+    display: flex;
+    flex-direction: column;   /* 元素垂直排列 */
+    justify-content: center;  /* 垂直方向居中 */
+    align-items: center;      /* 水平方向居中 */
+    padding: 20px;            /* 添加内边距使内容不贴边 */
+    width: 80%;             /* 设置表单宽度 */
+}
+.Login_Input{
+
+    margin-top: 1rem;
+}
+.Title_Sub_Small{
+    font-style: normal;
+    font-size: 1rem; /* Change font size */
+    text-align: center; /* Center the text */
+    margin-left:1rem;
+    margin-top:1rem;
+    color:rgb(var(--mdui-color-on-surface-variant))
+  }
+  .Netease_Login_Button{
+    width: 80%;
+    height: 3rem;
+    margin-top: 1rem;
+
+  }
+  .Login_Card_Input{
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;      /* 垂直居中 */
+    gap: 1rem;               /* 按钮之间的间距，可根据需要调整 */
+    height: 100rem%;            /* 可选：让容器的高度和父元素相同 */
+  }
+.Netease_Login{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中，如果需要 */
+    gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+    height: 100%;            /* 可选：让容器的高度和父元素相同 */
+}
+.Account_multiple{
+    width: 100rem;
+}
+.Netease_Login_Button_List{
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中，如果需要 */
+    gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+    height: 100%;            /* 可选：让容器的高度和父元素相同 */
+}
+.Account_Have_Signed{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中，如果需要 */
+    gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+    height: 100%;            /* 可选：让容器的高度和父元素相同 */
+}
+#Account_Have_Signed_List{
+    width: 100rem;
+    border:1px solid rgb(var(--mdui-color-primary));
+}
+.divider_B{
+    margin-top: 5rem;
+
+    width: calc(100% - 1rem);
+    height: 8px;
+
+
+  }
+  .Title_Sub_BOBO{
+
+    margin-top: 5rem;
+  }
+  .Me_Information{
+
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    height: 50rem;            /* 可选：让容器的高度和父元素相同 */
+  }
+  .Me_Information_Card{
+    margin-top:2rem;
+    width: 80%;
+    height: 50%;
+    border:1px solid rgb(var(--mdui-color-primary));
+    text-align: center;
+  }
+  .Me_Information_Name{
+    margin-top:1.5rem;
+    margin-left: 4rem;
+}
+.Title_Sub_Low_Top{
+    font-style: normal;
+    font-size: 1.5rem; /* Change font size */
+    text-align: center; /* Center the text */
+    margin-top: 1rem; /* Adjust vertical margin */
+    color:rgb(var(--mdui-color-on-surface-variant))
+  }
+.shopping_div{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中，如果需要 */
+  gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+  height: 100%;            /* 可选：让容器的高度和父元素相同 */
+  
+}
+.shopping_list{
+  border:1px solid rgb(var(--mdui-color-primary));
+  padding: 20px;            /* 添加内边距使内容不贴边 */
+  width: 80%;             /* 设置表单宽度 */
+}
+.Network_List{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+  height: 150vh;
+}
+#Network_List_List{
+  width: 100rem;
+  border:1px solid rgb(var(--mdui-color-primary));
+  height: 50%;            /* 可选：让容器的高度和父元素相同 */
+  overflow-y: auto; /* 当内容超出时显示垂直滚动条 */
+  overflow-x: hidden; /* 隐藏水平滚动条 */
+}
+.Netword_Card{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: auto;
+  width: 100%;            /* 可选：让容器的高度和父元素相同 */
+}
+.Network_Card_Information{
+  width:20%;
+  height: 20rem;
+  margin-left: 1rem;
+  margin-top: 1rem;
+  border:1px solid rgb(var(--mdui-color-primary));
+}
+.Network_Card_Do_Love{
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.Select_Single{
+  width:30%;
+  height: max-content;
+  margin-left:10rem;
+}
+.start_do{
+  width:80%;
+}
+.Dialog_Select_Button_div{
+  display: flex;
+  
+  margin-top: 1.5rem;
+  justify-content: right; /* 水平居中 */
+  align-items: right;     /* 垂直居中，如果需要 */
+  gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+  height: 100%;            /* 可选：让容器的高度和父元素相同 */
+}
+.start_button_class{
+  margin-top: 0;
+}
+.Dialog_Select_Select{
+  width: 30rem;
+}
