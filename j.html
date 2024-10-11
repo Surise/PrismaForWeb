@@ -201,24 +201,34 @@
                 <mdui-list id="Network_List_List">
                     
                 </mdui-list>
-
+                <mdui-button-icon variant="filled" icon="refresh" class="refresh_Net_Server"></mdui-button-icon>
             <!-- 测试区域 -->
             </div>
+            
             <mdui-dialog
                 stacked-actions
                 close-on-overlay-click
                 headline="选择角色"
                 class="Dialog_Select">
-                <mdui-select label="选择你要登录的角色名:" value="item-1" class="Dialog_Select_Select">
+                <mdui-select label="选择你要登录的角色名:" class="Dialog_Select_Select">
                     <mdui-menu-item value="item-1">Item 1</mdui-menu-item>
                     <mdui-menu-item value="item-2">Item 2</mdui-menu-item>
                 </mdui-select>
                 <div class="Dialog_Select_Button_div">
-                    <mdui-button-icon variant="filled" icon="add" class="add_name"></mdui-button-icon>
-                    <mdui-button-icon variant="tonal" icon="auto_fix_high"></mdui-button-icon>
+                    <mdui-button-icon variant="filled" icon="add" id="add_name"></mdui-button-icon>
+                    <mdui-button-icon variant="tonal" icon="auto_fix_high" id="random_add"></mdui-button-icon>
                     <mdui-button-icon variant="outlined" icon="delete"></mdui-button-icon>
                 </div>
                     <mdui-button slot="action" variant="text" id="start_button" class="start_button_class">开启代理服务</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="添加角色名"
+                description="add a character name"
+                class="Dialog_Add_Name">
+                    <mdui-text-field variant="outlined" label="角色名:" class="character_Input" clearable id="character"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="character_button">提交</mdui-button>
             </mdui-dialog>
         </div>
         <div id="Rental_server" class="page full-height" style="display: none;">
@@ -320,6 +330,18 @@
     });
     document.getElementById('account_login').addEventListener('click', () => {
         compareAndPost(select.value);
+    });
+    document.querySelector('.refresh_Net_Server').addEventListener('click', () => {
+        loadNetworkList();
+    });
+    document.getElementById('.add_name').addEventListener('click', () => {
+        open_add_dialog();
+    });
+    document.getElementById('character_button').addEventListener('click', () => {
+        add_net_name(document.getElementById("character").value);
+    });
+    document.getElementById('random_add').addEventListener('click', () => {
+        random_add();
     });
   </script>
 </body>
