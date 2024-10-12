@@ -579,6 +579,81 @@ async function opendialog(entityId) {
         console.error("请求失败: ", error);
     }
 }
+async function random_add() {
+    let characterName=generateRandomChineseName();
+    if (!characterName) {
+        console.error("请输入角色名");
+        return;
+    }
+
+    const requestData = {
+        name: characterName,
+        game_id: cache_server_entityID
+    };
+
+    try {
+        const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/character/netgame/add', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        const data = await response.json();
+
+        if (data.code === 0) {
+
+
+            const requestData = {
+                offset: 0,
+                length: 3,
+                Game_id: cache_server_entityID
+            };
+        
+            try {
+                const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/character/netgame/list', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+        
+                const data = await response.json();
+        
+                if (data.code === 0) {
+                    const namesList = data.data
+                        .filter(item => item.expire_time === 0)
+                        .map(item => ({ name: item.name, entity_id: item.entity_id }));
+        
+                    const selectElement = document.querySelector(".Dialog_Select_Select");
+        
+                    selectElement.innerHTML = '';
+        
+                    namesList.forEach(({ name, entity_id }) => {
+                        const option = document.createElement('mdui-menu-item');
+                        option.setAttribute('value', entity_id);
+                        option.textContent = name;
+                        selectElement.appendChild(option);
+                    });
+        
+                    // 打开对话框
+                    const dialog = document.querySelector(".Dialog_Select");
+                    dialog.open = true;
+                } else {
+                    console.error("服务器返回错误: ", data.msg);
+                }
+            } catch (error) {
+                console.error("请求失败: ", error);
+            }
+        } else {
+            console.error("操作失败: " + data.msg);
+        }
+    } catch (error) {
+        console.error("请求失败: ", error);
+    }
+}
 async function add_net_name(characterName) {
 
     if (!characterName) {
