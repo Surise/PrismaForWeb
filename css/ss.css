@@ -1,0 +1,205 @@
+.loader {
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+
+.circle-1 {
+    position: absolute;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color:  rgb(var(--mdui-color-on-surface-variant));
+    right: 4px;
+    animation: circle-rotate infinite 2s linear;
+    transform-origin: -14px 50%;
+}
+
+@keyframes circle-rotate {
+    0% {
+        transform: translateX(0) rotate(0turn);
+    }
+    25% {
+        transform: translateX(6px) rotate(0.5turn);
+    }
+    50% {
+        transform: translateX(12px) rotate(0.5turn);
+    }
+    100% {
+        transform: translateX(24px) rotate(0.5turn);
+    }
+}
+
+.circle-2 {
+    position: absolute;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color:  rgb(var(--mdui-color-on-surface-variant));
+    right: 16px;
+    transform-origin: -14px 50%;
+    animation: circle-2-rotate infinite 2s linear;
+}
+
+@keyframes circle-2-rotate {
+    0% {
+        transform: translateX(0) rotate(0turn);
+    }
+    50% {
+        transform: translateX(12px) rotate(0turn);
+    }
+    75% {
+        transform: translateX(18px) rotate(-0.5turn);
+    }
+    100% {
+        transform: translateX(24px) rotate(-0.5turn);
+    }
+}
+
+.tail-1 {
+    position: absolute;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color:  rgb(var(--mdui-color-on-surface-variant));
+    right: 4px;
+    animation: tail-rotate infinite 2s linear;
+    transform-origin: -14px 50%;
+}
+
+@keyframes tail-rotate {
+    0% {
+        transform: translateX(0) rotate(0turn);
+    }
+    25% {
+        transform: translateX(6px) rotate(0turn);
+    }
+    50% {
+        transform: translateX(12px) rotate(0.5turn);
+    }
+    100% {
+        transform: translateX(24px) rotate(0.5turn);
+    }
+}
+
+.tail-2 {
+    position: absolute;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color:  rgb(var(--mdui-color-on-surface-variant));
+    right: 16px;
+    transform-origin: -14px 50%;
+    animation: tail-2-rotate infinite 2s linear;
+}
+
+@keyframes tail-2-rotate {
+    0% {
+        transform: translateX(0) rotate(0turn);
+    }
+    50% {
+        transform: translateX(12px) rotate(0turn);
+    }
+    75% {
+        transform: translateX(18px) rotate(0turn);
+    }
+    100% {
+        transform: translateX(24px) rotate(-0.5turn);
+    }
+}
+
+.circle-3 {
+    position: absolute;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color:  rgb(var(--mdui-color-on-surface-variant));
+    right: 28px;
+    animation: circle-move infinite 2s linear;
+}
+
+@keyframes circle-move {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(24px);
+    }
+}
+
+.donut-container {
+    position: absolute;
+    top: 20px;
+    left: -4px;
+    width: 48px;
+    height: 24px;
+    overflow: hidden;
+}
+
+.donut {
+    position: absolute;
+    right: 8px;
+    width: 44px;
+    height: 22px;
+    opacity: 0;
+}
+
+.donut-1 {
+    top: 0;
+    border-radius: 0 0 22px 22px;
+    background-image: radial-gradient(circle at 50% 0%, transparent 14px,  rgb(var(--mdui-color-on-surface-variant)) 14px);
+    animation: donut infinite 2s linear;
+    transform-origin: 50% 0%;
+}
+
+@keyframes donut {
+    0% {
+        transform: translateX(0) rotate(0.5turn);
+        opacity: 1;
+    }
+    25% {
+        opacity: 1;
+        transform: translateX(6px) rotate(1turn);
+    }
+    50%, 100% {
+        opacity: 1;
+        transform: translateX(12px) rotate(1.5turn);
+    }
+}
+
+.donut-container-2 {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 48px;
+    height: 24px;
+    overflow: hidden;
+}
+
+.donut-2 {
+    top: 2px;
+    border-radius: 22px 22px 0 0;
+    background-image: radial-gradient(circle at 50% 100%, transparent 14px,  rgb(var(--mdui-color-on-surface-variant)) 14px);
+    animation: donut-2 infinite 2s linear 1s;
+    transform-origin: 50% 100%;
+}
+
+@keyframes donut-2 {
+    0% {
+        transform: translateX(0) rotate(-0.5turn);
+        opacity: 1;
+    }
+    25% {
+        opacity: 1;
+        transform: translateX(6px) rotate(-1turn);
+    }
+    50%, 100% {
+        opacity: 1;
+        transform: translateX(12px) rotate(-1.5turn);
+    }
+}

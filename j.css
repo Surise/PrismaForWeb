@@ -51,7 +51,7 @@
     justify-content: center; /* 水平居中 */
     align-items: center;     /* 垂直居中，如果需要 */
     gap: 1rem;               /* 按钮之间的间距，可根据需要调整 */
-    height: 100rem%;            /* 可选：让容器的高度和父元素相同 */
+    height: 100rem;            /* 可选：让容器的高度和父元素相同 */
 }
 .Main_Card{
 
@@ -139,7 +139,7 @@
     justify-content: center; /* 水平居中 */
     align-items: center;      /* 垂直居中 */
     gap: 1rem;               /* 按钮之间的间距，可根据需要调整 */
-    height: 100rem%;            /* 可选：让容器的高度和父元素相同 */
+    height: 100rem;            /* 可选：让容器的高度和父元素相同 */
   }
 .Netease_Login{
     margin-top: 1rem;
