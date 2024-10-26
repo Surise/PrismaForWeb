@@ -212,7 +212,7 @@ async function fetchAndDisplayItems() {
                 listItem.classList.add('rounded');
                 listItem.setAttribute('alignment', 'start');
                 listItem.setAttribute('description', `${description} - 价格: ${price} RB`);
-
+                listItem.setAttribute('onclick', `buy_items(${itemId},'${description}',${price})`);
                 // 设置标题和内容
                 listItem.innerHTML = `
                     ${name}
@@ -228,6 +228,38 @@ async function fetchAndDisplayItems() {
 
     } catch (error) {
         console.error('Error fetching items:', error);
+    }
+}
+let Cache_item_id=0;
+function buy_items(itemId,description,price) {
+    Cache_item_id=itemId;
+    const dialog = document.querySelector('.buy_item');
+    dialog.description = "你确定要购买"+description+"吗？价格为："+price+"RB";
+    dialog.headline="确定购买商品"+itemId+"吗？"
+    dialog.open = true;
+}
+async function buy_items_true(itemId) {
+    try {
+        const response = await fetch('http://127.0.0.1:'+successfulPort+`/balance/item/purchase/${itemId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.code === 0) {
+            const msg = result.msg;
+            console.log(`购买成功: ${msg}`);
+            document.querySelector('.buy_item').open = false;
+            document.querySelector('.Quanqian_success').open = true
+        } else {
+            throw new Error(`Error: ${result.msg}`);
+        }
+
+    } catch (error) {
+        console.error('Error fetching wallet balance:', error);
     }
 }
 let cache_;
@@ -261,8 +293,13 @@ function handleLogin(account, password,deviceID = null, deviceKey = null) {
     .then(response => response.json())
     .then(return_data => {
         console.log('Success:', return_data);
+        let return_data_data=return_data.data;
+        console.log('ABCD:',return_data_data);
+        cache_deviceID=return_data_data.deviceID;
+        cache_deviceKey=return_data_data.deviceKey;
+        console.log('ABCFGHGHD:',cache_deviceID);
         if (return_data.code == 0) {
-            cache_=JSON.stringify({ account: account, password: password,deviceID:deviceID, deviceKey:deviceKey })
+            cache_=JSON.stringify({ account: account, password: password,deviceID:cache_deviceID, deviceKey:cache_deviceKey })
             document.querySelector(".Dialog_Login").open = false;
             const dialog = document.querySelector(".Dialog_Login_Success");
             dialog.open = true;
@@ -292,6 +329,7 @@ function remark_save(remark) {
         model=4562;
     } else if (cache_account.account.includes('@')) {
         url = 'http://127.0.0.1:'+successfulPort+'/official/add';
+        console.log(cache_account.deviceID);
         data = JSON.stringify({ remark:remark, account: cache_account.account, password: cache_account.password,deviceID:cache_account.deviceID, deviceKey:cache_account.deviceKey });
         model=163;
     } else {
@@ -398,7 +436,8 @@ async function insertRemarks() {
         selectElement.appendChild(option);
     });
 }
-
+let cache_deviceID="";
+let cache_deviceKey="";
 reloadData();
 async function compareAndPost(compareArray) {
     const loginResults = [];
@@ -412,11 +451,12 @@ async function compareAndPost(compareArray) {
 
             // 判断数据来源是 official, 4399 还是 sauth
             if (officialData.includes(match)) {
-                postUrl = 'http://127.0.0.1:'+successfulPort+'/netease/auth/official';
+                model='official';
+                postUrl = 'http://127.0.0.1:'+successfulPort+'/netease/auth/offical';
                 postData = {
                     account: match.account,
                     password: match.password,
-                    deviceId: match.deviceId,
+                    deviceID: match.deviceId,
                     deviceKey: match.deviceKey
                 };
             } else if (data4399.includes(match)) {
@@ -445,7 +485,6 @@ async function compareAndPost(compareArray) {
 
                     const result = await response.json();
 
-                    // 判断是否登录成功
                     if (result.code === 0) {
                         loginResults.push({ remark: remark, status: '成功' });
                     } else {
@@ -467,11 +506,12 @@ async function compareAndPost(compareArray) {
     } else {
         dialogDescription.textContent = `登录成功的账号：${successRemarks.join(', ')}\n登录失败的账号：${failedRemarks.join(', ')}`;
     }
-    fetchAccounts();
-    loadNetworkList();
+    if (successRemarks.length > 0) {
+        fetchAccounts();
+        loadNetworkList();
+    }
     const dialog = document.querySelector('.Dialog_Account_Login_Success');
     dialog.open = true;
-
 }
 async function fetchAccounts() {
     try {
