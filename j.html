@@ -229,7 +229,7 @@
                 close-on-overlay-click
                 headline="选择角色"
                 class="Dialog_Select">
-                <mdui-select label="选择你要登录的角色名:" class="Dialog_Select_Select">
+                <mdui-select label="选择你要登录的角色名:" id="Dialog_Select_Select" class="Dialog_Select_Select">
                     <mdui-menu-item value="item-1">Item 1</mdui-menu-item>
                     <mdui-menu-item value="item-2">Item 2</mdui-menu-item>
                 </mdui-select>
@@ -341,9 +341,7 @@
     showPage("shopping");
     console.log(window.location.host);
     findOpenPort();
-    fetchAndDisplayItems();
-    fetchAccounts();
-    insertRemarks();
+
     document.querySelector(".Dialog_Open").addEventListener("click", () => 
         document.querySelector(".Dialog_Login").open = true
     );
@@ -376,6 +374,9 @@
     document.getElementById('random_add').addEventListener('click', () => {
         random_add();
     });
+    document.getElementById('start_button').addEventListener('click', () => {
+        sendPostRequest(cache_server_entityID);
+    })
   </script>
 </body>
 </html>

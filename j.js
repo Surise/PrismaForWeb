@@ -1,12 +1,21 @@
-let successfulPort=14250;
-
-
+let successfulPort = 14250;
+async function checkPort(port) {
+    try {
+        const response = await fetch(`http://127.0.0.1:${port}/base/ping`);
+        if (response.ok) {
+            return port;
+        }
+    } catch (error) {
+        }
+    return null;
+}
 async function findOpenPort() {
     for (let port = 14250; port <= 14300; port++) {
         const portStatus = await checkPort(port);
         if (portStatus !== null) {
             successfulPort = portStatus;
-            console.log(`成功的端口是: ${successfulPort}`); 
+            console.log(`成功的端口是: ${successfulPort}`);
+            main()
             break;
         }
     }
@@ -15,15 +24,11 @@ async function findOpenPort() {
         console.log("没有找到可访问的端口。");
     }
 }
-async function checkPort(port) {
-    try {
-        const response = await fetch(`http://127.0.0.1:${successfulPort}/base/ping`);
-        if (response.ok) {
-            return port;
-        }
-    } catch (error) {
-    }
-    return null;
+function main(){
+    fetchAndDisplayItems();
+    fetchAccounts();
+    insertRemarks();
+    reloadData();
 }
 async function getUserInfo() {
     try {
@@ -438,7 +443,7 @@ async function insertRemarks() {
 }
 let cache_deviceID="";
 let cache_deviceKey="";
-reloadData();
+
 async function compareAndPost(compareArray) {
     const loginResults = [];
     for (const compareItem of compareArray) {
@@ -573,6 +578,16 @@ function open_add_dialog() {
 //     const dialog = document.querySelector(".Dialog_Select");
 //     dialog.open = true;
 // }
+let selectedEntityId = '';
+let selectedName = '';
+// 异步函数打开对话框并加载角色
+let namesList = []; // 这个应该是从 API 返回的数据填充的
+
+// 定义函数，输入 entity_id 返回对应的 name
+function getNameByEntityId(entityId) {
+    const foundItem = namesList.find(item => item.entity_id === entityId);
+    return foundItem ? foundItem.name : null; // 如果找到返回 name，否则返回 null
+}
 async function opendialog(entityId) {
     cache_server_entityID = entityId;
 
@@ -583,7 +598,7 @@ async function opendialog(entityId) {
     };
 
     try {
-        const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/character/netgame/list', {
+        const response = await fetch('http://127.0.0.1:' + successfulPort + '/netease/character/netgame/list', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -594,7 +609,7 @@ async function opendialog(entityId) {
         const data = await response.json();
 
         if (data.code === 0) {
-            const namesList = data.data
+            namesList = data.data
                 .filter(item => item.expire_time === 0)
                 .map(item => ({ name: item.name, entity_id: item.entity_id }));
 
@@ -607,6 +622,14 @@ async function opendialog(entityId) {
                 option.setAttribute('value', entity_id);
                 option.textContent = name;
                 selectElement.appendChild(option);
+            });
+
+            // 添加事件监听器以设置全局变量
+            selectElement.addEventListener('change', (event) => {
+                selectedEntityId = event.target.value; // 获取选中的 entity_id
+                selectedName = getNameByEntityId(selectedEntityId); // 获取选中的名称
+                console.log('选中的角色 entity_id:', selectedEntityId);
+                console.log('选中的角色名称:', selectedName); // 打印角色名称
             });
 
             // 打开对话框
@@ -867,4 +890,140 @@ async function loadNetworkList() {
         offset += 50;
     }
 }
+async function sendPostRequest(serverEntity) {
+    const url = 'http://127.0.0.1:14250/netease/game/join/pre';
+    const data = {
+        gameId: serverEntity, 
+        roleName: selectedName
+    };
+    try {
+        const response = await fetch(url, {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('成功:', result);
+        fetchMcVersionName(serverEntity);
+        
+        
+    } catch (error) {
+        console.error('请求失败:', error);
+    }
+}
+let mcversioncache="";
+async function fetchMcVersionName(entityID) {
+    const versionUrl = 'http://127.0.0.1:14250/netease/game/version';
+    const mcVersionApiUrl = 'https://x19apigatewayobt.nie.netease.com/mc-version';
+
+    const versionData = { item_id: entityID };
+
+    try {
+        const response = await fetch(versionUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(versionData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const mcVersionId = result.data[0].mc_version_id;
+
+        const mcVersionResponse = await fetch(mcVersionApiUrl);
+        if (!mcVersionResponse.ok) {
+            throw new Error(`HTTP error! status: ${mcVersionResponse.status}`);
+        }
+
+        const mcVersionData = await mcVersionResponse.json();
+        const entities = mcVersionData.entities;
+
+        // 查找与 mc_version_id 匹配的版本名称
+        const versionEntity = mcVersionData.entities.find(entity => entity.entity_id === mcVersionId);
+        if (versionEntity) {
+            console.log(versionEntity.name);
+            mcversioncache=versionEntity.name;
+            fetchGameAddress(entityID);
+            return versionEntity.name; // 返回版本名称
+        } else {
+            throw new Error(`未找到匹配的版本名称，mc_version_id: ${mcVersionId}`);
+        }
+
+    } catch (error) {
+        console.error('请求失败:', error);
+        return null;
+    }
+}
+let ip = '';
+let port = '';
+async function fetchGameAddress(serverEntity) {
+    const addressUrl = 'http://127.0.0.1:14250/netease/game/address';
+    const requestData = { item_id: serverEntity };
+
+    try {
+        const response = await fetch(addressUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const addressData = await response.json(); // 获取响应数据
+        // 设置全局变量
+        ip = addressData.data.ip; 
+        port = addressData.data.port;
+        console.log('IP:', ip); // 输出 IP
+        console.log('Port:', port); // 输出 Port
+        startProxy(serverEntity,mcversioncache , false);
+    } catch (error) {
+        console.error('请求失败:', error);
+    }
+}
+async function startProxy(serverEntity, versionName, checkbox) {
+    const proxyStartUrl = 'http://127.0.0.1:14250/netease/game/proxy/start';
+    const requestData = {
+        serverItemId: serverEntity,
+        roleId: selectedEntityId,
+        roleName: selectedName,
+        gameVersion: versionName,
+        serverIp: ip, // 使用全局变量 ip
+        serverPort: port, // 使用全局变量 port
+        useProxy:false// 根据复选框状态设置
+    };
+
+    try {
+        const response = await fetch(proxyStartUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json(); // 获取响应数据
+        console.log('代理启动成功:', result); // 输出成功信息
+
+    } catch (error) {
+        console.error('请求失败:', error);
+    }
+}
