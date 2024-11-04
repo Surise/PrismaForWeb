@@ -251,7 +251,18 @@
             </mdui-dialog>
         </div>
         <div id="Rental_server" class="page full-height" style="display: none;">
-
+            <h1 class="Title_Sub">
+                <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                    Rental</span> 租聘服列表
+            </h1>
+            <!-- 测试区域 -->
+            <div class="Rental_List">
+                <mdui-list id="Rental_List_List">
+                    
+                </mdui-list>
+                <mdui-button-icon variant="filled" icon="refresh" class="refresh_Rental_Server"></mdui-button-icon>
+            <!-- 测试区域 -->
+            </div>
         </div>
         <div id="shopping" class="page full-height" style="display: none;">
             <h1 class="Title_Sub">
@@ -358,6 +369,9 @@
     });
     document.querySelector('.refresh_Net_Server').addEventListener('click', () => {
         loadNetworkList();
+    });
+    document.querySelector('.refresh_Rental_Server').addEventListener('click', () => {
+        loadRentalList();
     });
     document.getElementById('Without_Money').addEventListener('click', () => {
         buy_items_true(Cache_item_id);

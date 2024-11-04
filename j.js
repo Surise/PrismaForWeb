@@ -824,8 +824,105 @@ async function fetchData(offset, length) {
     } catch (error) {
         console.error('Fetch error:', error);
     }
+}async function fetchRentalData(offset, length) {
+    try {
+        const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/item/rentalgame/list', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ offset: offset, length: length })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            if (result.code === 0) {
+                return result.data;
+            } else {
+                console.error('Error:', result.msg);
+            }
+        } else {
+            console.error('Network response was not ok.');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}
+function updateRentalList(data) {
+    const RentalList = document.getElementById('Rental_List_List');
+
+    const collapseWrapper = document.createElement('mdui-collapse');
+    collapseWrapper.setAttribute('accordion', '');
+
+    data.forEach((item) => {
+        const collapseItem = document.createElement('mdui-collapse-item');
+        const listItemHeader = document.createElement('mdui-list-item');
+        listItemHeader.setAttribute('slot', 'header');
+        listItemHeader.setAttribute('icon', 'near_me');
+        listItemHeader.textContent = item.name;
+        collapseItem.appendChild(listItemHeader);
+
+        const contentDiv = document.createElement('div');
+        contentDiv.style.marginLeft = '2.5rem';
+
+        const listItem = document.createElement('mdui-list-item');
+        listItem.setAttribute('onclick', `opendialog('${item.entity_id}')`);
+
+        const card = document.createElement('mdui-card');
+        card.classList.add('Rental_Card');
+
+        
+        const imgsrc = document.createElement('img');
+        imgsrc.classList.add('Rental_Card_Img');
+        imgsrc.src = `${item.image_url}`;
+        card.appendChild(imgsrc);
+
+        const title = document.createElement('h1');
+        title.classList.add('Title_Sub_No_Header');
+        title.textContent = item.name;
+        card.appendChild(title);
+
+        const entityID = document.createElement('h1');
+        entityID.classList.add('Title_Sub_Small');
+        entityID.textContent = `EntityID: ${item.entity_id}`;
+        card.appendChild(entityID);
+
+        const summary = document.createElement('h1');
+        summary.classList.add('Title_Sub_Small');
+        summary.innerHTML = item.brief_summary;
+        card.appendChild(summary);
+
+        const onlineCount = document.createElement('h1');
+        onlineCount.classList.add('Title_Sub_Small');
+        onlineCount.textContent = `在线人数: ${item.player_count}`;
+        card.appendChild(onlineCount);
+
+        const version = document.createElement('h1');
+        version.classList.add('Title_Sub_Small');
+        version.textContent = `游戏版本: ${item.mc_version}`;
+        card.appendChild(version);
+
+        listItem.appendChild(card);
+        contentDiv.appendChild(listItem);
+        collapseItem.appendChild(contentDiv);
+        collapseWrapper.appendChild(collapseItem);
+    });
+
+    RentalList.appendChild(collapseWrapper);
 }
 
+async function loadRentalList() {
+    const length = 50;
+    let offset = 0;
+
+    for (let i = 0; i < 4; i++) {
+        const data = await fetchRentalData(offset, length);
+        if (data) {
+            updateRentalList(data);
+        }
+        offset += 50;
+    }
+}
 function updateNetworkList(data) {
     const networkList = document.getElementById('Network_List_List');
 

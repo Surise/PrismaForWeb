@@ -253,6 +253,45 @@
   width: 100%;
   height: 100%;
 }
+.Rental_List{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+  height: 150vh;
+}
+#Rental_List_List{
+  width: 100rem;
+  border:1px solid rgb(var(--mdui-color-primary));
+  height: 50%;            /* 可选：让容器的高度和父元素相同 */
+  overflow-y: auto; /* 当内容超出时显示垂直滚动条 */
+  overflow-x: hidden; /* 隐藏水平滚动条 */
+}
+.Rental_Card{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: auto;
+  width: 100%;            /* 可选：让容器的高度和父元素相同 */
+  text-align: center;
+}
+.Rentalk_Card_Information{
+  width:20%;
+  height: 20rem;
+  margin-left: 1rem;
+  margin-top: 1rem;
+  border:1px solid rgb(var(--mdui-color-primary));
+}
+.Rental_Card_Do_Love{
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.Rental_Card_Img{
+  width:20rem;
+  height:30rem;
+  border:1px solid rgb(var(--mdui-color-primary));
+  
+
+}
 .Select_Single{
   width:30%;
   height: max-content;
