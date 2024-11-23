@@ -29,7 +29,79 @@ function main(){
     fetchAccounts();
     insertRemarks();
     reloadData();
+    checkAuthStatus();
 }
+async function checkAuthStatus() {
+    try {
+        // 向指定接口发送 GET 请求
+        const response = await fetch('http://127.0.0.1:14250/auth/status');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        // 查找现有的 <mdui-navigation-drawer> 元素
+        const navigationDrawer = document.querySelector('mdui-navigation-drawer');
+        if (!navigationDrawer) {
+            console.error('Navigation drawer element not found');
+            return;
+        }
+
+        // 根据接口返回的数据，替换内容
+        if (result.data === true) {
+            navigationDrawer.innerHTML = `
+                <mdui-list>
+                    <mdui-collapse accordion>
+                        <mdui-collapse-item>
+                            <mdui-list-item slot="header" icon="home" onclick="showPage('home')">主页</mdui-list-item>
+                        </mdui-collapse-item>
+                        <mdui-collapse-item>
+                            <mdui-list-item slot="header" icon="account_circle" onclick="showPage('login')">账号管理</mdui-list-item>
+                        </mdui-collapse-item>
+                        <mdui-collapse-item>
+                            <mdui-list-item slot="header" icon="auto_awesome_motion">服务器管理</mdui-list-item>
+                            <div style="margin-left: 2.5rem">
+                                <mdui-list-item onclick="showPage('Network_Server')">网络服列表</mdui-list-item>
+                                <mdui-list-item onclick="showPage('Rental_server')">租聘服列表</mdui-list-item>
+                            </div>
+                        </mdui-collapse-item>
+                        <mdui-collapse-item>
+                            <mdui-list-item slot="header" icon="add_road">代理管理</mdui-list-item>
+                        </mdui-collapse-item>
+                        <mdui-collapse-item>
+                            <mdui-list-item slot="header" icon="shopping_cart" onclick="showPage('shopping')">商城</mdui-list-item>
+                        </mdui-collapse-item>
+                        <mdui-collapse-item>
+                            <mdui-list-item slot="header" icon="account_circle" onclick="showPage('me')">我</mdui-list-item>
+                        </mdui-collapse-item>
+                    </mdui-collapse>
+                </mdui-list>
+            `;
+        } else {
+            navigationDrawer.innerHTML = `
+                <mdui-list>
+                    <mdui-collapse accordion>
+                        <mdui-collapse-item>
+                            <mdui-list-item slot="header" icon="home" onclick="showPage('home')">主页</mdui-list-item>
+                        </mdui-collapse-item>
+                        <mdui-collapse-item>
+                            <mdui-list-item slot="header" icon="account_circle" onclick="showPage('surise')">登录</mdui-list-item>
+                        </mdui-collapse-item>
+                    </mdui-collapse>
+                </mdui-list>
+            `;
+        }
+
+        // 手动初始化动态组件
+        document.querySelectorAll('.mdui-collapse').forEach((el) => {
+            new mdui.Collapse(el);
+        });
+    } catch (error) {
+        console.error('Error fetching auth status:', error);
+    }
+}
+
 async function getUserInfo() {
     try {
         const response = await fetch(`http://127.0.0.1:${successfulPort}/auth/userinfo`, {

@@ -42,33 +42,24 @@
                 <mdui-list-item slot="header" icon="home" onclick="showPage('home')">主页</mdui-list-item>
               </mdui-collapse-item>
               <mdui-collapse-item>
-                <mdui-list-item slot="header" icon="account_circle" onclick="showPage('login')">账号管理</mdui-list-item>
-                
-              </mdui-collapse-item>
-
-              <mdui-collapse-item>
-                <mdui-list-item slot="header" icon="auto_awesome_motion">服务器管理</mdui-list-item>
-                <div style="margin-left: 2.5rem">
-                  <mdui-list-item onclick="showPage('Network_Server')">网络服列表</mdui-list-item>
-                  <mdui-list-item onclick="showPage('Rental_server')">租聘服列表</mdui-list-item>
-                </div>
-              </mdui-collapse-item>
-              <mdui-collapse-item>
-                <mdui-list-item slot="header" icon="add_road">代理管理</mdui-list-item>
-                
-              </mdui-collapse-item>
-              <mdui-collapse-item>
-                <mdui-list-item slot="header" icon="shopping_cart" onclick="showPage('shopping')">商城</mdui-list-item>
-                
-              </mdui-collapse-item>
-              <mdui-collapse-item>
-                <mdui-list-item slot="header" icon="account_circle" onclick="showPage('me')">我</mdui-list-item>
-                
+                <mdui-list-item slot="header" icon="account_circle" onclick="showPage('surise')">登录</mdui-list-item>
               </mdui-collapse-item>
             </mdui-collapse>
           </mdui-list>
     </mdui-navigation-drawer>
-  
+    <!-- <mdui-navigation-drawer modal close-on-esc close-on-overlay-click contained>
+        <mdui-list>
+            <mdui-collapse accordion>
+              <mdui-collapse-item>
+                <mdui-list-item slot="header" icon="home" onclick="showPage('home')">主页</mdui-list-item>
+              </mdui-collapse-item>
+              <mdui-collapse-item>
+                <mdui-list-item slot="header" icon="account_circle" onclick="showPage('surise')">登录</mdui-list-item>
+              </mdui-collapse-item>
+            </mdui-collapse>
+          </mdui-list>
+    </mdui-navigation-drawer> -->
+
     <div style="height: calc(100vh - 64px);">
         <!-- 主页面在他妈这里开始 -->
         <div id="home" class="page full-height" style="display: none;">
@@ -345,6 +336,13 @@
             </div>
             
         </div>
+        <div id="surise" class="page full-height" style="display: none;">
+            
+            <div class="copyright">
+                © 2019-2024 Surise Software. All Rights Reserved.
+            </div>
+            
+        </div>
     </div>
       
     </div>
@@ -375,7 +373,7 @@
             navigationDrawer.open = true;
         }
     });
-    showPage("shopping");
+    showPage("home");
     console.log(window.location.host);
     findOpenPort();
 
