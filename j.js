@@ -782,6 +782,89 @@ async function random_add() {
         console.error("请求失败: ", error);
     }
 }
+async function random_add_Rental() {
+    let characterName=generateRandomChineseName();
+    if (!characterName) {
+        console.error("请输入角色名");
+        return;
+    }
+
+    const requestData = {
+        name: characterName,
+        game_id: cache_server_entityID
+    };
+
+    try {
+        const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/character/rentalgame/add', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        const data = await response.json();
+
+        if (data.code === 0) {
+
+
+            const requestData = {
+                offset: 0,
+                length: 3,
+                Game_id: cache_server_entityID
+            };
+        
+            try {
+                const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/character/rentalgame/list', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+        
+                const data = await response.json();
+        
+                if (data.code === 0) {
+                    namesList_Rental = data.data
+                        .filter(item => item.delete_ts === 0)
+                        .map(item => ({ name: item.name, entity_id: item.entity_id }));
+                    console.log(namesList_Rental);
+                    const selectElement = document.querySelector(".Dialog_Select_Select_Rental");
+
+                    selectElement.innerHTML = '';
+
+                    namesList_Rental.forEach(({ name, entity_id }) => {
+                        const option = document.createElement('mdui-menu-item');
+                        option.setAttribute('value', entity_id);
+                        option.textContent = name;
+                        selectElement.appendChild(option);
+                    });
+
+                    // 添加事件监听器以设置全局变量
+                    selectElement.addEventListener('change', (event) => {
+                        selectedEntityId_Rental = event.target.value; // 获取选中的 entity_id
+                        selectedName_Rental = getNameByEntityId_Rental(selectedEntityId_Rental); // 获取选中的名称
+                        console.log('选中的角色 entity_id:', selectedEntityId_Rental);
+                        console.log('选中的角色名称:', selectedName_Rental); // 打印角色名称
+                    });
+        
+                    // 打开对话框
+                    const dialog = document.querySelector(".Dialog_Select_Rental");
+                    dialog.open = true;
+                } else {
+                    console.error("服务器返回错误: ", data.msg);
+                }
+            } catch (error) {
+                console.error("请求失败: ", error);
+            }
+        } else {
+            console.error("操作失败: " + data.msg);
+        }
+    } catch (error) {
+        console.error("请求失败: ", error);
+    }
+}
 async function add_net_name(characterName) {
 
     if (!characterName) {
