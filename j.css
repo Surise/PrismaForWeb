@@ -314,4 +314,18 @@
 }
 .Dialog_Select_Select{
   width: 30rem;
+}.Dialog_Select_Button_div_Rental{
+  display: flex;
+  
+  margin-top: 1.5rem;
+  justify-content: right; /* 水平居中 */
+  align-items: right;     /* 垂直居中，如果需要 */
+  gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
+  height: 100%;            /* 可选：让容器的高度和父元素相同 */
+}
+.start_button_class_Rental{
+  margin-top: 0;
+}
+.Dialog_Select_Select_Rental{
+  width: 30rem;
 }

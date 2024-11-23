@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN" class="mdui-theme-dark">
 <head>
-  <title>mdui Demos</title>
+  <title>Prisma NEL</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="mdui/mdui.css">
   <script src="mdui/mdui.global.js"></script>
@@ -263,6 +263,32 @@
                 <mdui-button-icon variant="filled" icon="refresh" class="refresh_Rental_Server"></mdui-button-icon>
             <!-- 测试区域 -->
             </div>
+            
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="选择角色"
+                class="Dialog_Select_Rental">
+                <mdui-select label="选择你要登录的角色名:" id="Dialog_Select_Select_Rental" class="Dialog_Select_Select_Rental">
+                    <mdui-menu-item value="item-1">Item 1</mdui-menu-item>
+                    <mdui-menu-item value="item-2">Item 2</mdui-menu-item>
+                </mdui-select>
+                <div class="Dialog_Select_Button_div_Rental">
+                    <mdui-button-icon variant="filled" icon="add" id="add_name_Rental"></mdui-button-icon>
+                    <mdui-button-icon variant="tonal" icon="auto_fix_high" id="random_add_Rental"></mdui-button-icon>
+                    <mdui-button-icon variant="outlined" icon="delete"></mdui-button-icon>
+                </div>
+                    <mdui-button slot="action" variant="text" id="start_button" class="start_button_class_Rental">开启代理服务</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="添加角色名"
+                description="add a character name"
+                class="Dialog_Add_Name_Rental">
+                    <mdui-text-field variant="outlined" label="角色名:" class="character_Input_Rental" clearable id="character_Rental"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="character_button_Rental">提交</mdui-button>
+            </mdui-dialog>
         </div>
         <div id="shopping" class="page full-height" style="display: none;">
             <h1 class="Title_Sub">
@@ -382,8 +408,14 @@
     document.getElementById('add_name').addEventListener('click', () => {
         open_add_dialog();
     });
+    document.getElementById('add_name_Rental').addEventListener('click', () => {
+        open_add_dialog_Rental();
+    });
     document.getElementById('character_button').addEventListener('click', () => {
         add_net_name(document.getElementById("character").value);
+    });
+    document.getElementById('character_button_Rental').addEventListener('click', () => {
+        add_net_name_Rental(document.getElementById("character_Rental").value);
     });
     document.getElementById('random_add').addEventListener('click', () => {
         random_add();

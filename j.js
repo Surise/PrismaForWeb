@@ -570,8 +570,12 @@ function logoutAccount(entityId) {
 }
 cache_server_entityID="";
 function open_add_dialog() {
-     const dialog = document.querySelector(".Dialog_Add_Name");
-     dialog.open = true;
+    const dialog = document.querySelector(".Dialog_Add_Name");
+    dialog.open = true;
+}
+function open_add_dialog_Rental() {
+    const dialog = document.querySelector(".Dialog_Add_Name_Rental");
+    dialog.open = true;
 }
 // function opendialog(entityId) {
 //     cache_server_entityID=entityId;
@@ -580,12 +584,18 @@ function open_add_dialog() {
 // }
 let selectedEntityId = '';
 let selectedName = '';
-// 异步函数打开对话框并加载角色
-let namesList = []; // 这个应该是从 API 返回的数据填充的
-
+let namesList = []; 
+let namesList_Rental = [];
+let selectedEntityId_Rental = '';
+let selectedName_Rental = '';
 // 定义函数，输入 entity_id 返回对应的 name
 function getNameByEntityId(entityId) {
     const foundItem = namesList.find(item => item.entity_id === entityId);
+    return foundItem ? foundItem.name : null; // 如果找到返回 name，否则返回 null
+}
+function getNameByEntityId_Rental(entityId) {
+    console.log(namesList_Rental);
+    const foundItem = namesList_Rental.find(item => String(item.entity_id) === String(entityId));
     return foundItem ? foundItem.name : null; // 如果找到返回 name，否则返回 null
 }
 async function opendialog(entityId) {
@@ -634,6 +644,61 @@ async function opendialog(entityId) {
 
             // 打开对话框
             const dialog = document.querySelector(".Dialog_Select");
+            dialog.open = true;
+        } else {
+            console.error("服务器返回错误: ", data.msg);
+        }
+    } catch (error) {
+        console.error("请求失败: ", error);
+    }
+}
+
+async function opendialog_Rental(entityId) {
+    cache_server_entityID = entityId;
+
+    const requestData = {
+        offset: 0,
+        length: 3,
+        Game_id: entityId
+    };
+
+    try {
+        const response = await fetch('http://127.0.0.1:' + successfulPort + '/netease/character/rentalgame/list', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        const data = await response.json();
+        console.log(data);
+        if (data.code === 0) {
+            namesList_Rental = data.data
+                .filter(item => item.delete_ts === 0)
+                .map(item => ({ name: item.name, entity_id: item.entity_id }));
+            console.log(namesList_Rental);
+            const selectElement = document.querySelector(".Dialog_Select_Select_Rental");
+
+            selectElement.innerHTML = '';
+
+            namesList_Rental.forEach(({ name, entity_id }) => {
+                const option = document.createElement('mdui-menu-item');
+                option.setAttribute('value', entity_id);
+                option.textContent = name;
+                selectElement.appendChild(option);
+            });
+
+            // 添加事件监听器以设置全局变量
+            selectElement.addEventListener('change', (event) => {
+                selectedEntityId_Rental = event.target.value; // 获取选中的 entity_id
+                selectedName_Rental = getNameByEntityId_Rental(selectedEntityId_Rental); // 获取选中的名称
+                console.log('选中的角色 entity_id:', selectedEntityId_Rental);
+                console.log('选中的角色名称:', selectedName_Rental); // 打印角色名称
+            });
+
+            // 打开对话框
+            const dialog = document.querySelector(".Dialog_Select_Rental");
             dialog.open = true;
         } else {
             console.error("服务器返回错误: ", data.msg);
@@ -793,6 +858,82 @@ async function add_net_name(characterName) {
         console.error("请求失败: ", error);
     }
 }
+async function add_net_name_Rental(characterName) {
+
+    if (!characterName) {
+        console.error("请输入角色名");
+        return;
+    }
+
+    const requestData = {
+        name: characterName,
+        game_id: cache_server_entityID
+    };
+
+    try {
+        const response = await fetch("http://127.0.0.1:14250/netease/character/rentalgame/add", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        const data = await response.json();
+
+        if (data.code === 0) {
+            const dialog = document.querySelector(".Dialog_Add_Name_Rental");
+            dialog.open = false;
+
+            const requestData = {
+                offset: 0,
+                length: 3,
+                Game_id: cache_server_entityID
+            };
+        
+            try {
+                const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/character/rentalgame/list', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+        
+                const data = await response.json();
+        
+                if (data.code === 0) {
+                    const namesList_Rental = data.data
+                        .filter(item => item.delete_ts === 0)
+                        .map(item => ({ name: item.name, entity_id: item.entity_id }));
+        
+                    const selectElement = document.querySelector(".Dialog_Select_Select_Rental");
+        
+                    selectElement.innerHTML = '';
+        
+                    namesList_Rental.forEach(({ name, entity_id }) => {
+                        const option = document.createElement('mdui-menu-item');
+                        option.setAttribute('value', entity_id);
+                        option.textContent = name;
+                        selectElement.appendChild(option);
+                    });
+        
+                    // 打开对话框
+                    const dialog = document.querySelector(".Dialog_Select_Rental");
+                    dialog.open = true;
+                } else {
+                    console.error("服务器返回错误: ", data.msg);
+                }
+            } catch (error) {
+                console.error("请求失败: ", error);
+            }
+        } else {
+            console.error("操作失败: " + data.msg);
+        }
+    } catch (error) {
+        console.error("请求失败: ", error);
+    }
+}
 function generateRandomChineseName(length = 6) {
     let name = 'Pr_';
     for (let i = 0; i < length; i++) {
@@ -866,7 +1007,7 @@ function updateRentalList(data) {
         contentDiv.style.marginLeft = '2.5rem';
 
         const listItem = document.createElement('mdui-list-item');
-        listItem.setAttribute('onclick', `opendialog('${item.entity_id}')`);
+        listItem.setAttribute('onclick', `opendialog_Rental('${item.entity_id}')`);
 
         const card = document.createElement('mdui-card');
         card.classList.add('Rental_Card');
