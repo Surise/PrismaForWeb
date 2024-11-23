@@ -278,7 +278,7 @@
                     <mdui-button-icon variant="tonal" icon="auto_fix_high" id="random_add_Rental"></mdui-button-icon>
                     <mdui-button-icon variant="outlined" icon="delete"></mdui-button-icon>
                 </div>
-                    <mdui-button slot="action" variant="text" id="start_button" class="start_button_class_Rental">开启代理服务</mdui-button>
+                    <mdui-button slot="action" variant="text" id="start_button_Rental" class="start_button_class_Rental">开启代理服务</mdui-button>
             </mdui-dialog>
             <mdui-dialog
                 stacked-actions
@@ -426,7 +426,9 @@
     document.getElementById('random_add_Rental').addEventListener('click', () => {
         random_add_Rental();
     })
-    
+    document.getElementById('start_button_Rental').addEventListener('click', () => {
+        sendPostRequest_Rental(cache_server_entityID);
+    })
   </script>
 </body>
 </html>

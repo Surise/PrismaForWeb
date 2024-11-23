@@ -751,7 +751,7 @@ async function random_add() {
                 const data = await response.json();
         
                 if (data.code === 0) {
-                    const namesList = data.data
+                    namesList = data.data
                         .filter(item => item.expire_time === 0)
                         .map(item => ({ name: item.name, entity_id: item.entity_id }));
         
@@ -1325,6 +1325,146 @@ async function startProxy(serverEntity, versionName, checkbox) {
         gameVersion: versionName,
         serverIp: ip, // 使用全局变量 ip
         serverPort: port, // 使用全局变量 port
+        useProxy:false// 根据复选框状态设置
+    };
+
+    try {
+        const response = await fetch(proxyStartUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json(); // 获取响应数据
+        console.log('代理启动成功:', result); // 输出成功信息
+
+    } catch (error) {
+        console.error('请求失败:', error);
+    }
+}
+
+
+
+async function sendPostRequest_Rental(serverEntity) {
+    const url = 'http://127.0.0.1:14250/netease/game/join/pre';
+    const data = {
+        gameId: serverEntity, 
+        roleName: selectedName_Rental
+    };
+    try {
+        const response = await fetch(url, {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('成功:', result);
+        fetchMcVersionName_Rental(serverEntity);
+        
+        
+    } catch (error) {
+        console.error('请求失败:', error);
+    }
+}
+let mcversioncache_Rental="";
+async function fetchMcVersionName_Rental(entityID) {
+    const versionUrl = 'http://127.0.0.1:14250/netease/game/version';
+    const mcVersionApiUrl = 'https://x19apigatewayobt.nie.netease.com/mc-version';
+
+    const versionData = { item_id: entityID };
+
+    try {
+        const response = await fetch(versionUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(versionData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const mcVersionId = result.data[0].mc_version_id;
+
+        const mcVersionResponse = await fetch(mcVersionApiUrl);
+        if (!mcVersionResponse.ok) {
+            throw new Error(`HTTP error! status: ${mcVersionResponse.status}`);
+        }
+
+        const mcVersionData = await mcVersionResponse.json();
+        const entities = mcVersionData.entities;
+
+        // 查找与 mc_version_id 匹配的版本名称
+        const versionEntity = mcVersionData.entities.find(entity => entity.entity_id === mcVersionId);
+        if (versionEntity) {
+            console.log(versionEntity.name);
+            mcversioncache=versionEntity.name;
+            fetchGameAddress_Rental(entityID);
+            return versionEntity.name; // 返回版本名称
+        } else {
+            throw new Error(`未找到匹配的版本名称，mc_version_id: ${mcVersionId}`);
+        }
+
+    } catch (error) {
+        console.error('请求失败:', error);
+        return null;
+    }
+}
+let ip_Rental = '';
+let port_Rental = '';
+async function fetchGameAddress_Rental(serverEntity) {
+    const addressUrl = 'http://127.0.0.1:14250/netease/game/address';
+    const requestData = { item_id: serverEntity };
+
+    try {
+        const response = await fetch(addressUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const addressData = await response.json(); // 获取响应数据
+        // 设置全局变量
+        ip_Rental = addressData.data.ip; 
+        port_Rental = addressData.data.port;
+        console.log('IP:', ip); // 输出 IP
+        console.log('Port:', port); // 输出 Port
+        startProxy_Rental(serverEntity,mcversioncache , false);
+    } catch (error) {
+        console.error('请求失败:', error);
+    }
+}
+async function startProxy_Rental(serverEntity, versionName, checkbox) {
+    const proxyStartUrl = 'http://127.0.0.1:14250/netease/game/proxy/start';
+    const requestData = {
+        serverItemId: serverEntity,
+        roleId: selectedEntityId_Rental,
+        roleName: selectedName_Rental,
+        gameVersion: versionName,
+        serverIp: ip_Rental, // 使用全局变量 ip
+        serverPort: port_Rental, // 使用全局变量 port
         useProxy:false// 根据复选框状态设置
     };
 
