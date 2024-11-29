@@ -41,9 +41,7 @@
               <mdui-collapse-item>
                 <mdui-list-item slot="header" icon="home" onclick="showPage('home')">主页</mdui-list-item>
               </mdui-collapse-item>
-              <mdui-collapse-item>
-                <mdui-list-item slot="header" icon="account_circle" onclick="showPage('surise')">登录</mdui-list-item>
-              </mdui-collapse-item>
+
             </mdui-collapse>
           </mdui-list>
     </mdui-navigation-drawer>
@@ -74,7 +72,7 @@
             <h1 class="Title_Sub">一个平平无奇基于网易我的世界的网页版启动器</h1>
             <div class="Title_Button_Big">
                 <mdui-button variant="elevated" class="Big_Button">教程</mdui-button>
-                <mdui-button variant="filled" class="Big_Button" onclick="showPage('login')">开始使用</mdui-button>
+                <mdui-button variant="filled" class="Big_Button" onclick="checkAuthStatus_lite()">开始使用</mdui-button>
                 <mdui-button variant="tonal" class="Big_Button">购买卡密</mdui-button>
             </div>
             <div class="Title_Button_Small">
@@ -105,6 +103,21 @@
             <div class="copyright">
                 © 2019-2024 Surise Software. All Rights Reserved.
             </div>
+            <mdui-dialog close-on-overlay-click class="Localserver_Error">
+                <span slot="headline">并未检测到Localserver存在</span>
+                <span slot="description">请确定您的Localserver（本地服务端）已启动且显示LocalServer Ready...<br>如找不到LocalServer请前往售后群下载或咨询对应卡网负责人</span>
+            </mdui-dialog>
+            <mdui-dialog
+                close-on-overlay-click
+                headline="登录到Prisma NEL"
+                class="Prisma_Login">
+                    <mdui-text-field variant="outlined" label="账号:" class="Prisma_Login_Input" clearable id="Prisma_login_account"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="密码:" class="Prisma_Login_Input" clearable id="Prisma_login_password"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="Prisma_Register_button">没有账号？去注册</mdui-button>
+                    <mdui-button slot="action" variant="tonal" id="Prisma_Login_button">登录</mdui-button>
+            </mdui-dialog>
+            
+            
         </div>
         <!-- 主页面在他妈这里结束 -->
         <div id="login" class="page full-height" style="display: none;">
@@ -207,7 +220,11 @@
                     Network</span> 网络服列表
             </h1>
             <!-- 测试区域 -->
+             <div class="searchBox_">
+                <mdui-text-field icon="search" label="搜索..." id="searchBox" oninput="filterList()"></mdui-text-field>
+            </div>
             <div class="Network_List">
+                
                 <mdui-list id="Network_List_List">
                     
                 </mdui-list>
@@ -245,7 +262,9 @@
             <h1 class="Title_Sub">
                 <span style="color:rgb(var(--mdui-color-inverse-primary))">
                     Rental</span> 租聘服列表
-            </h1>
+            </h1><div class="searchBox_rental">
+                <mdui-text-field icon="search" label="搜索..." id="searchBox_rental" oninput="filterList_rental()"></mdui-text-field>
+            </div>
             <!-- 测试区域 -->
             <div class="Rental_List">
                 <mdui-list id="Rental_List_List">
@@ -319,7 +338,7 @@
                     M</span>e
             </h1>
                 <div class="Me_Information">
-
+                    
                 </div>
             <!-- <div class="Me_Information">
                 <mdui-card variant="outlined" class="Me_Information_Card">
@@ -331,6 +350,19 @@
                       </mdui-list>
                 </mdui-card>
             </div> -->
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="激活卡密"
+                description="将你在卡网购买的卡密（EnvisionCharge_开头的）填入到下方的文本框中"
+                class="Activate_Card">
+                    <mdui-text-field variant="outlined" label="卡密:" class="Activate_Input" clearable id="Activate_Input"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="Activate_">激活</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog close-on-overlay-click class="Activate_successful">
+                <span slot="headline">激活成功</span>
+                <span slot="description">如余额未发生变化请刷新界面重试</span>
+            </mdui-dialog>
             <div class="copyright">
                 © 2019-2024 Surise Software. All Rights Reserved.
             </div>
@@ -343,6 +375,11 @@
             </div>
             
         </div>
+        <mdui-dialog close-on-overlay-click class="Wait_Zha_Pian_User">
+            <span slot="headline">Wait</span>
+            <span slot="description">正在加载数据...请稍等...</span>
+            <mdui-linear-progress></mdui-linear-progress>
+        </mdui-dialog>
     </div>
       
     </div>
@@ -389,6 +426,7 @@
         remark_save(document.getElementById('remark').value);
     });
     document.getElementById('account_login').addEventListener('click', () => {
+        
         compareAndPost(select.value);
     });
     document.querySelector('.refresh_Net_Server').addEventListener('click', () => {
@@ -427,6 +465,13 @@
     document.getElementById('start_button_Rental').addEventListener('click', () => {
         sendPostRequest_Rental(cache_server_entityID);
     })
+    document.getElementById('Prisma_Login_button').addEventListener('click', () => {
+        Prisma_Login(document.getElementById('Prisma_login_account').value, document.getElementById('Prisma_login_password').value);
+    })
+    document.getElementById('Activate_').addEventListener('click', () => {
+        Activate_CardPress(document.getElementById('Activate_Input').value);
+    })
+    
   </script>
 </body>
 </html>

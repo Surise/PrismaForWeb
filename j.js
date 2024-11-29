@@ -1,40 +1,110 @@
-let successfulPort = 14250;
 async function checkPort(port) {
     try {
         const response = await fetch(`http://127.0.0.1:${port}/base/ping`);
         if (response.ok) {
-            return port;
+            return port; // 返回成功的端口号
         }
+        throw new Error(`Port ${port} not available`);
     } catch (error) {
-        }
-    return null;
-}
-async function findOpenPort() {
-    for (let port = 14250; port <= 14300; port++) {
-        const portStatus = await checkPort(port);
-        if (portStatus !== null) {
-            successfulPort = portStatus;
-            console.log(`成功的端口是: ${successfulPort}`);
-            main()
-            break;
-        }
+        throw new Error(`Port ${port} not accessible`); // 显式抛出错误
     }
+}
+let successfulPort=14250;
+async function findOpenPort() {
+    const portRange = Array.from({ length: 11 }, (_, i) => 14250 + i); // 14250 到 14260
+    const portChecks = portRange.map(port => checkPort(port)); // 创建检查所有端口的 Promise 数组
 
-    if (successfulPort === null) {
+    try {
+        successfulPort = await Promise.any(portChecks); // 并发检查所有端口
+        console.log(`成功的端口是: ${successfulPort}`);
+        checkAuthStatus();
+    } catch {
+        const dialog = document.querySelector('.Localserver_Error');
+        dialog.open = true;
+        successfulPort=null;
         console.log("没有找到可访问的端口。");
     }
 }
+
 function main(){
     fetchAndDisplayItems();
     fetchAccounts();
     insertRemarks();
     reloadData();
-    checkAuthStatus();
 }
+async function checkAuthStatus_lite() {
+    if (successfulPort == null) {
+        findOpenPort();
+        const dialog = document.querySelector('.Localserver_Error');
+        dialog.open = true;
+    }
+    try {
+        // 向指定接口发送 GET 请求
+        const response = await fetch(`http://127.0.0.1:${successfulPort}/auth/status`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.data === true) {
+            checkAuthStatus();
+            showPage('login');
+            main();
+        } else {
+            const dialog = document.querySelector('.Prisma_Login');
+            dialog.open = true;
+        }
+
+        // 手动初始化动态组件
+        document.querySelectorAll('.mdui-collapse').forEach((el) => {
+            new mdui.Collapse(el);
+        });
+    } catch (error) {
+        console.error('Error fetching auth status:', error);
+    }
+}
+
+function Prisma_Login(username, password) {
+    const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+    wait_dialog.open = true;
+    fetch(`http://127.0.0.1:${successfulPort}/auth/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.code === 0) {  // 根据需求，将 code === 0 判断为登录成功
+            console.log('登录成功');
+            showPage('login');
+            checkAuthStatus();
+            main();
+        } else {
+            console.log('登录失败:', data.message || '未知错误');
+        }
+    })
+    .catch(error => {
+        console.error('请求失败:', error);
+        alert('无法连接到服务器，请稍后再试');
+    });
+    wait_dialog.open = false;
+}
+
 async function checkAuthStatus() {
     try {
         // 向指定接口发送 GET 请求
-        const response = await fetch('http://127.0.0.1:14250/auth/status');
+        const response = await fetch('http://127.0.0.1:'+successfulPort+'/auth/status');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -78,6 +148,8 @@ async function checkAuthStatus() {
                     </mdui-collapse>
                 </mdui-list>
             `;
+            
+            main();
         } else {
             navigationDrawer.innerHTML = `
                 <mdui-list>
@@ -85,9 +157,7 @@ async function checkAuthStatus() {
                         <mdui-collapse-item>
                             <mdui-list-item slot="header" icon="home" onclick="showPage('home')">主页</mdui-list-item>
                         </mdui-collapse-item>
-                        <mdui-collapse-item>
-                            <mdui-list-item slot="header" icon="account_circle" onclick="showPage('surise')">登录</mdui-list-item>
-                        </mdui-collapse-item>
+                        
                     </mdui-collapse>
                 </mdui-list>
             `;
@@ -221,7 +291,46 @@ async function getWalletBalance() {
         console.error('Error fetching wallet balance:', error);
     }
 }
-
+function Activate(){
+    const dialog= document.querySelector('.Activate_Card');
+    dialog.open=true;
+}
+function Activate_CardPress(card){
+    const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+    wait_dialog.open = true;
+    fetch(`http://127.0.0.1:${successfulPort}/wallet/balance/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            code: card
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.code === 0) {
+            displayMeInformation();
+            const _dialog= document.querySelector('.Activate_Card');
+            _dialog.open=false;
+            const dialog = document.querySelector('.Activate_successful');
+            dialog.open = true;
+            console.log('激活成功:', data.message);
+            
+        } else {
+            console.log('登录失败:', data.message || '未知错误');
+        }
+    })
+    .catch(error => {
+        console.error('请求失败:', error);
+    });
+    wait_dialog.open = false;
+}
 async function displayMeInformation() {
     try {
         const userInfo = await getUserInfo();
@@ -246,9 +355,15 @@ async function displayMeInformation() {
         const deadlineItem = document.createElement('mdui-list-item');
         deadlineItem.setAttribute('headline', '到期时长:');
         deadlineItem.setAttribute('description', permission.usageDeadline);
+
+        const kami = document.createElement('mdui-list-item');
+        kami.setAttribute('headline', '激活卡密');
+        kami.setAttribute('description', '---激活在卡网购买的充值码---');
+        kami.setAttribute('onclick', `Activate()`);
         mduiList.appendChild(roleItem);
         mduiList.appendChild(balanceItem);
         mduiList.appendChild(deadlineItem);
+        mduiList.appendChild(kami);
         card.appendChild(h1);
         card.appendChild(mduiList);
         meInfoDiv.appendChild(card);
@@ -517,6 +632,8 @@ let cache_deviceID="";
 let cache_deviceKey="";
 
 async function compareAndPost(compareArray) {
+    const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+    wait_dialog.open = true;
     const loginResults = [];
     for (const compareItem of compareArray) {
         const match = combinedData.find(item => item.remark === compareItem);
@@ -587,6 +704,7 @@ async function compareAndPost(compareArray) {
         fetchAccounts();
         loadNetworkList();
     }
+    wait_dialog.open=false;
     const dialog = document.querySelector('.Dialog_Account_Login_Success');
     dialog.open = true;
 }
@@ -1218,6 +1336,40 @@ async function loadRentalList() {
         }
         offset += 50;
     }
+}
+function filterList() {
+    const searchBox = document.getElementById('searchBox');
+    const filterText = searchBox.value.toLowerCase();
+    const networkList = document.getElementById('Network_List_List');
+    const collapseItems = networkList.querySelectorAll('mdui-collapse-item');
+
+    collapseItems.forEach((collapseItem) => {
+        const header = collapseItem.querySelector('mdui-list-item[slot="header"]');
+        const headerText = header.textContent.toLowerCase();
+
+        if (headerText.includes(filterText)) {
+            collapseItem.style.display = ''; // 显示符合条件的项
+        } else {
+            collapseItem.style.display = 'none'; // 隐藏不符合条件的项
+        }
+    });
+}
+function filterList_rental() {
+    const searchBox = document.getElementById('searchBox_rental');
+    const filterText = searchBox.value.toLowerCase();
+    const networkList = document.getElementById('Rental_List_List');
+    const collapseItems = networkList.querySelectorAll('mdui-collapse-item');
+
+    collapseItems.forEach((collapseItem) => {
+        const header = collapseItem.querySelector('mdui-list-item[slot="header"]');
+        const headerText = header.textContent.toLowerCase();
+
+        if (headerText.includes(filterText)) {
+            collapseItem.style.display = ''; // 显示符合条件的项
+        } else {
+            collapseItem.style.display = 'none'; // 隐藏不符合条件的项
+        }
+    });
 }
 function updateNetworkList(data) {
     const networkList = document.getElementById('Network_List_List');

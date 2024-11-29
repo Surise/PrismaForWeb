@@ -118,8 +118,19 @@
 }
 .Login_Input{
 
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
+.Prisma_Login_Input{
+  margin-top: 1rem;
+}
+.Wait_Zha_Pian_User {
+  overflow: hidden; /* 删除滚动条 */
+}
+
+.Wait_Zha_Pian_User mdui-linear-progress {
+  overflow: hidden; /* 删除滚动条 */
+}
+
 .Title_Sub_Small{
     font-style: normal;
     font-size: 1rem; /* Change font size */
@@ -229,6 +240,25 @@
   gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
   height: 150vh;
 }
+.searchBox_ {
+  text-align: center;       /* 水平居中 */
+  margin-top: 2rem;         /* 根据需要调整顶部间距 */
+}
+
+.searchBox_ mdui-text-field {
+  display: inline-block;    /* 防止占满一整行，保持为内联块 */
+  width: 80rem;             /* 控制搜索框宽度 */
+}
+.searchBox_rental {
+  text-align: center;       /* 水平居中 */
+  margin-top: 2rem;         /* 根据需要调整顶部间距 */
+}
+
+.searchBox_rental mdui-text-field {
+  display: inline-block;    /* 防止占满一整行，保持为内联块 */
+  width: 80rem;             /* 控制搜索框宽度 */
+}
+
 #Network_List_List{
   width: 100rem;
   border:1px solid rgb(var(--mdui-color-primary));
