@@ -113,9 +113,23 @@
                 class="Prisma_Login">
                     <mdui-text-field variant="outlined" label="账号:" class="Prisma_Login_Input" clearable id="Prisma_login_account"></mdui-text-field>
                     <mdui-text-field variant="outlined" label="密码:" class="Prisma_Login_Input" clearable id="Prisma_login_password"></mdui-text-field>
-                    <mdui-button slot="action" variant="text" id="Prisma_Register_button">没有账号？去注册</mdui-button>
+                    <mdui-button slot="action" variant="text" id="Prisma_login_button_to_register">没有账号？去注册</mdui-button>
                     <mdui-button slot="action" variant="tonal" id="Prisma_Login_button">登录</mdui-button>
             </mdui-dialog>
+            <mdui-dialog
+                close-on-overlay-click
+                headline="注册Prisma NEL"
+                class="Prisma_Register">
+                    <mdui-text-field variant="outlined" label="账号:" class="Prisma_Login_Input" clearable id="Prisma_Register_account"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="密码:" class="Prisma_Login_Input" clearable id="Prisma_Register_password"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="邮箱:" class="Prisma_Login_Input" clearable id="Prisma_Register_email"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="手机号:" class="Prisma_Login_Input" clearable id="Prisma_Register_phone"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="注册码:" class="Prisma_Login_Input" clearable id="Prisma_Register_kami"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="Discord账号:" class="Prisma_Login_Input" clearable id="Prisma_Register_dcname"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="Prisma_Register_button_to_login">已有账号？去登录</mdui-button>
+                    <mdui-button slot="action" variant="tonal" id="Prisma_register_button">注册</mdui-button>
+            </mdui-dialog>
+            
             
             
         </div>
@@ -380,6 +394,12 @@
             <span slot="description">正在加载数据...请稍等...</span>
             <mdui-linear-progress></mdui-linear-progress>
         </mdui-dialog>
+        <mdui-dialog
+                headline="注册成功"
+                description="您已经成功注册至Prisma NEL,现在您可以使用您注册的账号和密码登录,请注意自行妥善保存好自己的账号密码"
+                close-on-overlay-click
+                id="register_success">
+            </mdui-dialog>
     </div>
       
     </div>
@@ -426,7 +446,13 @@
         remark_save(document.getElementById('remark').value);
     });
     document.getElementById('account_login').addEventListener('click', () => {
-        
+        if (money_man==false){
+            const dialog = document.getElementById('register_success');
+            dialog.headline="请先购买时长"
+            dialog.description="未购买时长将无法使用";
+            dialog.open=true;
+            return;
+    }
         compareAndPost(select.value);
     });
     document.querySelector('.refresh_Net_Server').addEventListener('click', () => {
@@ -471,7 +497,69 @@
     document.getElementById('Activate_').addEventListener('click', () => {
         Activate_CardPress(document.getElementById('Activate_Input').value);
     })
+    document.getElementById('Prisma_login_button_to_register').addEventListener('click', () => {
+        const dialog=document.querySelector('.Prisma_Register');
+        dialog.open=true;
+        
+    })
     
+    document.getElementById('Prisma_register_button').addEventListener('click', () => {
+    // 获取输入值
+        const account = document.getElementById('Prisma_Register_account').value;
+        const password = document.getElementById('Prisma_Register_password').value;
+        const email = document.getElementById('Prisma_Register_email').value;
+        const phone = document.getElementById('Prisma_Register_phone').value;
+        const kami = document.getElementById('Prisma_Register_kami').value;
+        const dcname = document.getElementById('Prisma_Register_dcname').value;
+        if (!validateAccount(account)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="用户名格式不正确！要求只允许字母和数字，3~20位";
+            dialog.open=true;
+            return;
+        }
+
+        if (!validatePassword(password)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="密码格式不正确！至少8个字符，包含字母和数字";
+            dialog.open=true;
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="电子邮件格式不正确！";
+            dialog.open=true;
+            return;
+        }
+
+        if (!validatePhone(phone)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="电话号码格式不正确！";
+            dialog.open=true;
+            return;
+        }
+
+        if (!validateKami(kami)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="注册码不正确！请注意输入的应该是EnvisionRegister_开头的注册码，而非激活码";
+            dialog.open=true;
+            return;
+        }
+
+        if (!dcname) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="Discord账号为空，如果没有请随便填";
+            dialog.open=true;
+            return;
+        }
+        Register(account, password, email, phone, kami, dcname);
+    });
   </script>
 </body>
 </html>

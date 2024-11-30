@@ -37,8 +37,11 @@ async function checkAuthStatus_lite() {
         findOpenPort();
         const dialog = document.querySelector('.Localserver_Error');
         dialog.open = true;
+        return;
     }
+    
     try {
+
         // 向指定接口发送 GET 请求
         const response = await fetch(`http://127.0.0.1:${successfulPort}/auth/status`);
         if (!response.ok) {
@@ -331,6 +334,7 @@ function Activate_CardPress(card){
     });
     wait_dialog.open = false;
 }
+let money_man=false;
 async function displayMeInformation() {
     try {
         const userInfo = await getUserInfo();
@@ -353,8 +357,16 @@ async function displayMeInformation() {
         balanceItem.setAttribute('description', `${balance} RB`);
         const permission = permissionInfo[0];
         const deadlineItem = document.createElement('mdui-list-item');
-        deadlineItem.setAttribute('headline', '到期时长:');
-        deadlineItem.setAttribute('description', permission.usageDeadline);
+        console.log(permission);
+        if (permission == null) {
+            deadlineItem.setAttribute('headline', '到期时长:');
+            deadlineItem.setAttribute('description', "您还没有购买时长");
+            money_man=false;
+        }else{
+            deadlineItem.setAttribute('headline', '到期时长:');
+            deadlineItem.setAttribute('description', permission.usageDeadline);
+            money_man=true;
+        }
 
         const kami = document.createElement('mdui-list-item');
         kami.setAttribute('headline', '激活卡密');
@@ -1572,8 +1584,71 @@ async function startProxy(serverEntity, versionName, checkbox) {
         console.error('请求失败:', error);
     }
 }
+function validateAccount(account) {
+    const regex = /^[a-zA-Z0-9]{3,20}$/; // 只允许字母和数字
+    return regex.test(account);
+}
+function validatePassword(password) {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;  // 至少8个字符，包含字母和数字
+    return regex.test(password);
+}
+function validateEmail(email) {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;  // 基本的邮件格式
+    return regex.test(email);
+}
+function validatePhone(phone) {
+    const regex = /^[1][3-9][0-9]{9}$/;  // 中国大陆手机号的正则表达式
+    return regex.test(phone);
+}
+function validateKami(kami) {
+    return kami.startsWith('EnvisionRegister_');
+}
 
 
+function Register(username, password,email, phone,kami,dcname) {
+    const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+    wait_dialog.open = true;
+    const url = 'http://127.0.0.1:14250/auth/register';
+    const data = {
+        username: username,
+        password: password,
+        email: email,
+        phone: phone,
+        RegCode: kami,
+        discord: dcname
+    };
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.code===0) {
+           const dialog = document.getElementById('register_success');
+           dialog.headline="注册成功"
+            dialog.description=result.msg;
+           dialog.open=true;
+           const dddialog=document.querySelector('.Prisma_Register');
+            dddialog.open=false;
+        } else {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description=result.msg;
+            dialog.open=true;
+        }
+        console.log(result);
+    })
+    .catch(error => {
+        const dialog = document.getElementById('register_success');
+        dialog.headline="注册失败"
+        dialog.description=error;
+        dialog.open=true;
+    })
+    wait_dialog.open=false;
+}
 
 async function sendPostRequest_Rental(serverEntity) {
     const url = 'http://127.0.0.1:14250/netease/game/join/pre';
