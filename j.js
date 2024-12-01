@@ -89,17 +89,28 @@ function Prisma_Login(username, password) {
     })
     .then(data => {
         if (data.code === 0) {  // 根据需求，将 code === 0 判断为登录成功
-            console.log('登录成功');
-            showPage('login');
+            const dialog_ = document.querySelector('.Prisma_Login');
+            dialog_.open = false;
+            const dialog = document.getElementById('register_success');
+            dialog.headline="登录成功"
+            dialog.description="现在你可以开始使用Prisma NEL";
+            dialog.open=true;
             checkAuthStatus();
             main();
         } else {
             console.log('登录失败:', data.message || '未知错误');
+            const dialog = document.getElementById('register_success');
+            dialog.headline="登录失败"
+            dialog.description=data.msg;
+            dialog.open=true;
         }
     })
     .catch(error => {
         console.error('请求失败:', error);
-        alert('无法连接到服务器，请稍后再试');
+        const dialog = document.getElementById('register_success');
+            dialog.headline="登录失败·未知错误"
+            dialog.description=error;
+            dialog.open=true;
     });
     wait_dialog.open = false;
 }
@@ -458,6 +469,8 @@ async function buy_items_true(itemId) {
             console.log(`购买成功: ${msg}`);
             document.querySelector('.buy_item').open = false;
             document.querySelector('.Quanqian_success').open = true
+            displayMeInformation();
+
         } else {
             throw new Error(`Error: ${result.msg}`);
         }
@@ -465,6 +478,16 @@ async function buy_items_true(itemId) {
     } catch (error) {
         console.error('Error fetching wallet balance:', error);
     }
+}
+function change(event) {
+    if (event.keyCode === 13) {
+        document.getElementById('Prisma_login_password').focus();
+      }
+}
+function clickhere(event) {
+    if (event.keyCode === 13) {
+        document.getElementById('Prisma_Login_button').click();
+      }
 }
 let cache_;
 function handleLogin(account, password,deviceID = null, deviceKey = null) {
@@ -496,12 +519,9 @@ function handleLogin(account, password,deviceID = null, deviceKey = null) {
     })
     .then(response => response.json())
     .then(return_data => {
-        console.log('Success:', return_data);
         let return_data_data=return_data.data;
-        console.log('ABCD:',return_data_data);
         cache_deviceID=return_data_data.deviceID;
         cache_deviceKey=return_data_data.deviceKey;
-        console.log('ABCFGHGHD:',cache_deviceID);
         if (return_data.code == 0) {
             cache_=JSON.stringify({ account: account, password: password,deviceID:cache_deviceID, deviceKey:cache_deviceKey })
             document.querySelector(".Dialog_Login").open = false;
@@ -555,6 +575,7 @@ function remark_save(remark) {
         if (data.code == 0) {
             const dialog = document.querySelector(".Dialog_Login_Success");
             dialog.open = false;
+            insertRemarks();
         } else {
             console.error('Login failed:'+data.msg);
         }

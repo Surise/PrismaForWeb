@@ -111,8 +111,8 @@
                 close-on-overlay-click
                 headline="登录到Prisma NEL"
                 class="Prisma_Login">
-                    <mdui-text-field variant="outlined" label="账号:" class="Prisma_Login_Input" clearable id="Prisma_login_account"></mdui-text-field>
-                    <mdui-text-field variant="outlined" label="密码:" class="Prisma_Login_Input" clearable id="Prisma_login_password"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="账号:" class="Prisma_Login_Input" clearable id="Prisma_login_account" onkeydown="change(event)"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="密码:" class="Prisma_Login_Input" clearable id="Prisma_login_password" onkeydown="clickhere(event)"></mdui-text-field>
                     <mdui-button slot="action" variant="text" id="Prisma_login_button_to_register">没有账号？去注册</mdui-button>
                     <mdui-button slot="action" variant="tonal" id="Prisma_Login_button">登录</mdui-button>
             </mdui-dialog>
@@ -499,6 +499,11 @@
     })
     document.getElementById('Prisma_login_button_to_register').addEventListener('click', () => {
         const dialog=document.querySelector('.Prisma_Register');
+        dialog.open=true;
+        
+    })
+    document.getElementById('Prisma_Register_button_to_login').addEventListener('click', () => {
+        const dialog=document.querySelector('.Prisma_login');
         dialog.open=true;
         
     })
