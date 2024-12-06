@@ -5,13 +5,29 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="mdui/mdui.css">
   <script src="mdui/mdui.global.js"></script>
-  <script src="j.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="j.css">
-  <link rel="stylesheet" href="./css/ss.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+  <script src="./js/main.js"></script>
+  <link href="./css/icon.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/change.css">
+  <link rel="stylesheet" href="./css/loading.css">
+    <script src="./js/gsap.js"></script>
 </head>
 <body>
+    <div id="loading-box">
+        <div class="loading-left-bg"></div>
+        <div class="loading-right-bg"></div>
+        <div class="spinner-box">
+            <div class="loader">
+                <div class="inner one"></div>
+                <div class="inner two"></div>
+                <div class="inner three"></div>
+            </div>
+            <div class="loading-word">
+                <p class="loading-title" id="loading-title">Surise_su</p>
+                <span id="loading-text">加载中</span>
+            </div>
+        </div>
+    </div>
   <mdui-top-app-bar style="position: relative;">
     <mdui-button-icon icon="menu" class="open"></mdui-button-icon>
     <mdui-top-app-bar-title>Prisma NEL
@@ -19,7 +35,7 @@
     </mdui-top-app-bar-title>
     <div style="flex-grow: 1"></div>
     <mdui-button-icon icon="close" id="close">
-        <div class="loader">
+        <div class="_loader">
             <div class="donut-container">
                 <div class="donut donut-1"></div>
             </div>
@@ -60,6 +76,12 @@
 
     <div style="height: calc(100vh - 64px);">
         <!-- 主页面在他妈这里开始 -->
+         <div class="copyright">
+                <p id="hitokoto">
+                    <p id="hitokoto_text">:D 获取中...</p><br>
+                    © 2019-2024 Surise Software. All Rights Reserved.
+                </p>
+        </div>
         <div id="home" class="page full-height" style="display: none;">
             <h1 class="Title_Main">
                 <span style="color:rgb(var(--mdui-color-inverse-primary))">
@@ -70,10 +92,11 @@
             </h1>
             
             <h1 class="Title_Sub">一个平平无奇基于网易我的世界的网页版启动器</h1>
+            
             <div class="Title_Button_Big">
                 <mdui-button variant="elevated" class="Big_Button">教程</mdui-button>
                 <mdui-button variant="filled" class="Big_Button" onclick="checkAuthStatus_lite()">开始使用</mdui-button>
-                <mdui-button variant="tonal" class="Big_Button">购买卡密</mdui-button>
+                <mdui-button variant="tonal" class="Big_Button" onclick="gotobuy()">购买卡密</mdui-button>
             </div>
             <div class="Title_Button_Small">
                 <mdui-button variant="text" class="Small_Button">售后群：947765201 </mdui-button>
@@ -100,9 +123,7 @@
                     <rect width="100%" height="100%" fill="url(#a)" data-v-c3449c65=""></rect>
                 </svg>
             </div>
-            <div class="copyright">
-                © 2019-2024 Surise Software. All Rights Reserved.
-            </div>
+            
             <mdui-dialog close-on-overlay-click class="Localserver_Error">
                 <span slot="headline">并未检测到Localserver存在</span>
                 <span slot="description">请确定您的Localserver（本地服务端）已启动且显示LocalServer Ready...<br>如找不到LocalServer请前往售后群下载或咨询对应卡网负责人</span>
@@ -224,9 +245,9 @@
                   </mdui-list>
             </div>
             <mdui-snackbar close-on-outside-click class="switch_successful" id="switch_successful">切换成功</mdui-snackbar>
-            <div class="copyright">
+            <!-- <div class="copyright">
                 © 2019-2024 Surise Software. All Rights Reserved.
-            </div>
+            </div> -->
         </div>
         <div id="Network_Server" class="page full-height" style="display: none;">
             <h1 class="Title_Sub">
@@ -377,16 +398,16 @@
                 <span slot="headline">激活成功</span>
                 <span slot="description">如余额未发生变化请刷新界面重试</span>
             </mdui-dialog>
-            <div class="copyright">
+            <!-- <div class="copyright">
                 © 2019-2024 Surise Software. All Rights Reserved.
-            </div>
+            </div> -->
             
         </div>
         <div id="surise" class="page full-height" style="display: none;">
             
-            <div class="copyright">
+            <!-- <div class="copyright">
                 © 2019-2024 Surise Software. All Rights Reserved.
-            </div>
+            </div> -->
             
         </div>
         <mdui-dialog close-on-overlay-click class="Wait_Zha_Pian_User">
@@ -445,6 +466,13 @@
         // remark_save(document.getElementById('remark').value, cache_account.account, cache_account.password,cache_account.deviceID,cache_account.deviceKey);
         remark_save(document.getElementById('remark').value);
     });
+    window.addEventListener('load', function () {
+        document.querySelector('#loading-box').className = 'loaded';
+        setTimeout(function () {
+            document.querySelector('#loading-text').innerHTML = "字体及文件加载可能需要一定时间";
+        }, 3000);
+    });
+
     document.getElementById('account_login').addEventListener('click', () => {
         if (money_man==false){
             const dialog = document.getElementById('register_success');
@@ -455,6 +483,39 @@
     }
         compareAndPost(select.value);
     });
+    function fetchHitokoto() {
+        const hitokoto = document.querySelector('#hitokoto_text');
+
+        // Fade out
+        hitokoto.style.opacity = '0';
+
+        // Wait for fade-out to complete, then fetch new data
+        setTimeout(() => {
+            fetch('https://v1.hitokoto.cn')
+                .then(response => response.json())
+                .then(data => {
+                    hitokoto.href = `https://hitokoto.cn/?uuid=${data.uuid}`;
+                    hitokoto.innerText = `『${data.hitokoto}』`;
+
+                    // Fade in
+                    hitokoto.style.opacity = '1';
+                })
+                .catch(console.error);
+        }, 500); // Matches the fade-out duration
+    }
+
+    fetchHitokoto();
+    setInterval(fetchHitokoto, 10000);
+    function change(event) {
+        if (event.keyCode === 13) {
+            document.getElementById('Prisma_login_password').focus();
+        }
+    }
+    function clickhere(event) {
+        if (event.keyCode === 13) {
+            document.getElementById('Prisma_Login_button').click();
+        }
+    }
     document.querySelector('.refresh_Net_Server').addEventListener('click', () => {
         loadNetworkList();
     });
