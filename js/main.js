@@ -115,6 +115,7 @@ function Prisma_Login(username, password) {
     wait_dialog.open = false;
 }
 
+
 async function checkAuthStatus() {
     try {
         // 向指定接口发送 GET 请求
@@ -151,7 +152,7 @@ async function checkAuthStatus() {
                             </div>
                         </mdui-collapse-item>
                         <mdui-collapse-item>
-                            <mdui-list-item slot="header" icon="add_road">代理管理</mdui-list-item>
+                            <mdui-list-item slot="header" icon="add_road" onclick="showPage('daili')">代理管理</mdui-list-item>
                         </mdui-collapse-item>
                         <mdui-collapse-item>
                             <mdui-list-item slot="header" icon="shopping_cart" onclick="showPage('shopping')">商城</mdui-list-item>

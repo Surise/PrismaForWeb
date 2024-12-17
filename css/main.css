@@ -120,6 +120,22 @@
     padding: 20px;            /* 添加内边距使内容不贴边 */
     width: 80%;             /* 设置表单宽度 */
 }
+.daili_main {
+  justify-content: center; /* 水平居中内容 */
+  align-items: center; /* 垂直居中内容 */
+  height: 100vh; /* 让容器占满整个视窗高度 */
+  margin: 0 auto; /* 水平居中整个容器 */
+  width: 50%; /* 宽度占视窗的一半 */
+  box-sizing: border-box; /* 确保 padding 和 border 不影响宽度 */
+}
+mdui-card {
+  border-radius: 10px; /* 圆角 */
+  margin-top: auto;
+}
+mdui-card p {
+  line-height: 1.5;
+}
+
 .Login_Input{
 
   margin-top: 1rem;

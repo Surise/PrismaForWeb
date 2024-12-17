@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="mdui-theme-dark">
+<head>
+  <title>Prisma NEL</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="mdui/mdui.css">
+  <script src="mdui/mdui.global.js"></script>
+  <script src="./js/main.js"></script>
+  <link href="./css/icon.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/change.css">
+  <link rel="stylesheet" href="./css/loading.css">
+    <script src="./js/gsap.js"></script>
+</head>
+<body>
+    <div id="loading-box">
+        <div class="loading-left-bg"></div>
+        <div class="loading-right-bg"></div>
+        <div class="spinner-box">
+            <div class="loader">
+                <div class="inner one"></div>
+                <div class="inner two"></div>
+                <div class="inner three"></div>
+            </div>
+            <div class="loading-word">
+                <p class="loading-title" id="loading-title">Surise_su</p>
+                <span id="loading-text">加载中</span>
+            </div>
+        </div>
+    </div>
+  <mdui-top-app-bar style="position: relative;">
+    <mdui-button-icon icon="menu" class="open"></mdui-button-icon>
+    <mdui-top-app-bar-title>Prisma NEL
+        
+    </mdui-top-app-bar-title>
+    <div style="flex-grow: 1"></div>
+    <mdui-button-icon icon="close" id="close">
+        <div class="_loader">
+            <div class="donut-container">
+                <div class="donut donut-1"></div>
+            </div>
+            <div class="donut-container-2">
+                <div class="donut donut-2"></div>
+            </div>
+            <div class="circle-1"></div>
+            <div class="tail-1"></div>
+            <div class="circle-2"></div>
+            <div class="tail-2"></div>
+            <div class="circle-3"></div>
+        </div>
+    </mdui-button-icon>
+  </mdui-top-app-bar>
+  <div class="drawer_div" style="position: relative; overflow: hidden">
+    <mdui-navigation-drawer modal close-on-esc close-on-overlay-click contained>
+        <mdui-list>
+            <mdui-collapse accordion>
+              <mdui-collapse-item>
+                <mdui-list-item slot="header" icon="home" onclick="showPage('home')">主页</mdui-list-item>
+              </mdui-collapse-item>
+
+            </mdui-collapse>
+          </mdui-list>
+    </mdui-navigation-drawer>
+    <!-- <mdui-navigation-drawer modal close-on-esc close-on-overlay-click contained>
+        <mdui-list>
+            <mdui-collapse accordion>
+              <mdui-collapse-item>
+                <mdui-list-item slot="header" icon="home" onclick="showPage('home')">主页</mdui-list-item>
+              </mdui-collapse-item>
+              <mdui-collapse-item>
+                <mdui-list-item slot="header" icon="account_circle" onclick="showPage('surise')">登录</mdui-list-item>
+              </mdui-collapse-item>
+            </mdui-collapse>
+          </mdui-list>
+    </mdui-navigation-drawer> -->
+
+    <div style="height: calc(100vh - 64px);">
+        <!-- 主页面在他妈这里开始 -->
+         <div class="copyright">
+                <p id="hitokoto">
+                    <p id="hitokoto_text">:D 获取中...</p><br>
+                    © 2019-2024 Surise Software. All Rights Reserved.
+                </p>
+        </div>
+        <div id="home" class="page full-height" style="display: none;">
+            <h1 class="Title_Main">
+                <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                    P</span>risma 
+                <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                    NEL
+                </span>
+            </h1>
+            
+            <h1 class="Title_Sub">一个平平无奇基于网易我的世界的网页版启动器</h1>
+            
+            <div class="Title_Button_Big">
+                <mdui-button variant="elevated" class="Big_Button">教程</mdui-button>
+                <mdui-button variant="filled" class="Big_Button" onclick="checkAuthStatus_lite()">开始使用</mdui-button>
+                <mdui-button variant="tonal" class="Big_Button" onclick="gotobuy()">购买卡密</mdui-button>
+            </div>
+            <div class="Title_Button_Small">
+                <mdui-button variant="text" class="Small_Button">售后群：947765201 </mdui-button>
+            </div>
+            <!-- <div class="Main_Card_List">
+                <mdui-card  variant="filled" class="Main_Card">
+                    <h1 class="Title_Sub" id="left_top">环境检测</h1>
+                   <mdui-avatar class="left_top_two">
+                        <mdui-icon name="adb" ></mdui-icon>
+                    </mdui-avatar>
+                    <mdui-button-icon variant="filled" icon="refresh" class="right_down"></mdui-button-icon> 
+                </mdui-card>
+                <mdui-card  variant="filled" class="Main_Card">
+                </mdui-card>
+
+            </div> -->
+            <div class="divider" data-v-c3449c65="">
+                <svg aria-hidden="true" width="100%" height="8" fill="none" xmlns="http://www.w3.org/2000/svg" data-v-c3449c65="">
+                    <pattern id="a" width="91" height="8" patternUnits="userSpaceOnUse" data-v-c3449c65="">
+                        <g clip-path="url(#clip0_2426_11367)" data-v-c3449c65="">
+                            <path d="M114 4c-5.067 4.667-10.133 4.667-15.2 0S88.667-.667 83.6 4 73.467 8.667 68.4 4 58.267-.667 53.2 4 43.067 8.667 38 4 27.867-.667 22.8 4 12.667 8.667 7.6 4-2.533-.667-7.6 4s-10.133 4.667-15.2 0S-32.933-.667-38 4s-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0" stroke="#E1E3E1" stroke-linecap="square" data-v-c3449c65=""></path>
+                        </g>
+                    </pattern>
+                    <rect width="100%" height="100%" fill="url(#a)" data-v-c3449c65=""></rect>
+                </svg>
+            </div>
+            
+            <mdui-dialog close-on-overlay-click class="Localserver_Error">
+                <span slot="headline">并未检测到Localserver存在</span>
+                <span slot="description">请确定您的Localserver（本地服务端）已启动且显示LocalServer Ready...<br>如找不到LocalServer请前往售后群下载或咨询对应卡网负责人</span>
+            </mdui-dialog>
+            <mdui-dialog
+                close-on-overlay-click
+                headline="登录到Prisma NEL"
+                class="Prisma_Login">
+                    <mdui-text-field variant="outlined" label="账号:" class="Prisma_Login_Input" clearable id="Prisma_login_account" onkeydown="change(event)"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="密码:" class="Prisma_Login_Input" clearable id="Prisma_login_password" onkeydown="clickhere(event)"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="Prisma_login_button_to_register">没有账号？去注册</mdui-button>
+                    <mdui-button slot="action" variant="tonal" id="Prisma_Login_button">登录</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog
+                close-on-overlay-click
+                headline="注册Prisma NEL"
+                class="Prisma_Register">
+                    <mdui-text-field variant="outlined" label="账号:" class="Prisma_Login_Input" clearable id="Prisma_Register_account"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="密码:" class="Prisma_Login_Input" clearable id="Prisma_Register_password"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="邮箱:" class="Prisma_Login_Input" clearable id="Prisma_Register_email"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="手机号:" class="Prisma_Login_Input" clearable id="Prisma_Register_phone"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="注册码:" class="Prisma_Login_Input" clearable id="Prisma_Register_kami"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="Discord账号:" class="Prisma_Login_Input" clearable id="Prisma_Register_dcname"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="Prisma_Register_button_to_login">已有账号？去登录</mdui-button>
+                    <mdui-button slot="action" variant="tonal" id="Prisma_register_button">注册</mdui-button>
+            </mdui-dialog>
+            
+            
+            
+        </div>
+        <!-- 主页面在他妈这里结束 -->
+        <div id="login" class="page full-height" style="display: none;">
+            <!-- <mdui-dialog close-on-overlay-click class="Dialog_Login">
+               <div class="Netease_Login">
+                    <div class="Login_Card_Input">
+                        <mdui-card class="Netease_Login_Input">
+                            <h1 class="Title_Sub_Small">
+                                登录账号
+                            </h1>
+                            <mdui-text-field variant="outlined" label="账号:" class="Login_Input" clearable ></mdui-text-field><br>
+                            <mdui-text-field variant="outlined" label="密码:" class="Login_Input" clearable ></mdui-text-field><br>
+                            <mdui-button class="Netease_Login_Button" variant="outlined" >登录</mdui-button>
+                        </mdui-card>
+                    </div>
+                </div>
+            </mdui-dialog> -->
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="登录账号"
+                class="Dialog_Login">
+                    <mdui-text-field variant="outlined" label="账号:" class="Login_Input" clearable id="login_account"></mdui-text-field>
+                    <mdui-text-field variant="outlined" label="密码:" class="Login_Input" clearable id="login_password"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="login_button">登录</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="登录成功！"
+                description="为他取一个备注吧"
+                class="Dialog_Login_Success">
+                    <mdui-text-field variant="outlined" label="备注:" class="Login_Input" clearable id="remark"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="remark_button">保存</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog close-on-overlay-click class="Dialog_Account_Login_Success">
+                <span slot="headline">登录结果:</span>
+                <span slot="description" id="Login_return">You have already login in a account with your bitch cerebrum.</span>
+            </mdui-dialog>
+            <h1 class="Title_Sub">
+                <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                    N</span>etease <span style="color:rgb(var(--mdui-color-inverse-primary))">账</span>号管理
+                </h1>
+             <div class="Netease_Login_Button_List">
+                <mdui-button-icon variant="filled" icon="add" class="Dialog_Open"></mdui-button-icon>
+                <mdui-button-icon variant="filled" icon="auto_fix_high"></mdui-button-icon>
+                <mdui-button-icon variant="filled" icon="delete"></mdui-button-icon>
+                <mdui-button-icon variant="tonal" icon="more_vert"></mdui-button-icon>
+             </div>
+            <div class="Netease_Login">
+                <mdui-select multiple class="Account_multiple" placeholder="点击选择想要登录的账号">
+                    <mdui-menu-item value="测试账户1">测试账户1</mdui-menu-item>
+                    <mdui-menu-item value="测试账户2">测试账户2</mdui-menu-item>
+                </mdui-select>
+                <mdui-button-icon variant="outlined" icon="near_me" id="account_login"></mdui-button-icon>
+            </div>
+            <div class="divider_B">
+                <svg aria-hidden="true" width="100%" height="8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <pattern id="wavePattern" width="91" height="8" patternUnits="userSpaceOnUse">
+                        <path d="M114 4c-5.067 4.667-10.133 4.667-15.2 0S88.667-.667 83.6 4 73.467 8.667 68.4 4 58.267-.667 53.2 4 43.067 8.667 38 4 27.867-.667 22.8 4 12.667 8.667 7.6 4-2.533-.667-7.6 4s-10.133 4.667-15.2 0S-32.933-.667-38 4s-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0-10.133-4.667-15.2 0-10.133 4.667-15.2 0" 
+                              stroke="#E1E3E1" stroke-linecap="square"></path>
+                    </pattern>
+                    <rect width="100%" height="100%" fill="url(#wavePattern)"></rect>
+                </svg>
+            </div>
+            <div class="Title_Sub_BOBO">
+                <h1 class="Title_Sub">
+                    <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                        已</span>登录的账号
+                </h1>
+            </div>
+            <div class="Account_Have_Signed">
+                <mdui-list id="Account_Have_Signed_List">
+                    <mdui-collapse accordion>
+                      <mdui-collapse-item>
+                        <mdui-list-item slot="header" icon="account_circle">测试账户1</mdui-list-item>
+                        <div style="margin-left: 2.5rem">
+                            <mdui-list-item>切换到该账号</mdui-list-item>
+                          <mdui-list-item>退出登录</mdui-list-item>
+                        </div>
+                      </mdui-collapse-item>
+                      <mdui-collapse-item>
+                        <mdui-list-item slot="header" icon="account_circle">测试账户2</mdui-list-item>
+                        <div style="margin-left: 2.5rem">
+                            <mdui-list-item>切换到该账号</mdui-list-item>
+                          <mdui-list-item>退出登录</mdui-list-item>
+                        </div>
+                      </mdui-collapse-item>
+                    </mdui-collapse>
+                  </mdui-list>
+            </div>
+            <mdui-snackbar close-on-outside-click class="switch_successful" id="switch_successful">切换成功</mdui-snackbar>
+            <!-- <div class="copyright">
+                © 2019-2024 Surise Software. All Rights Reserved.
+            </div> -->
+        </div>
+        <div id="Network_Server" class="page full-height" style="display: none;">
+            <h1 class="Title_Sub">
+                <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                    Network</span> 网络服列表
+            </h1>
+            <!-- 测试区域 -->
+             <div class="searchBox_">
+                <mdui-text-field icon="search" label="搜索..." id="searchBox" oninput="filterList()"></mdui-text-field>
+            </div>
+            <div class="Network_List">
+                
+                <mdui-list id="Network_List_List">
+                    
+                </mdui-list>
+                <mdui-button-icon variant="filled" icon="refresh" class="refresh_Net_Server"></mdui-button-icon>
+            <!-- 测试区域 -->
+            </div>
+            
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="选择角色"
+                class="Dialog_Select">
+                <mdui-select label="选择你要登录的角色名:" id="Dialog_Select_Select" class="Dialog_Select_Select">
+                    <mdui-menu-item value="item-1">Item 1</mdui-menu-item>
+                    <mdui-menu-item value="item-2">Item 2</mdui-menu-item>
+                </mdui-select>
+                <div class="Dialog_Select_Button_div">
+                    <mdui-button-icon variant="filled" icon="add" id="add_name"></mdui-button-icon>
+                    <mdui-button-icon variant="tonal" icon="auto_fix_high" id="random_add"></mdui-button-icon>
+                    <mdui-button-icon variant="outlined" icon="delete"></mdui-button-icon>
+                </div>
+                    <mdui-button slot="action" variant="text" id="start_button" class="start_button_class">开启代理服务</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="添加角色名"
+                description="add a character name"
+                class="Dialog_Add_Name">
+                    <mdui-text-field variant="outlined" label="角色名:" class="character_Input" clearable id="character"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="character_button">提交</mdui-button>
+            </mdui-dialog>
+        </div>
+        <div id="Rental_server" class="page full-height" style="display: none;">
+            <h1 class="Title_Sub">
+                <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                    Rental</span> 租聘服列表
+            </h1><div class="searchBox_rental">
+                <mdui-text-field icon="search" label="搜索..." id="searchBox_rental" oninput="filterList_rental()"></mdui-text-field>
+            </div>
+            <!-- 测试区域 -->
+            <div class="Rental_List">
+                <mdui-list id="Rental_List_List">
+                    
+                </mdui-list>
+                <mdui-button-icon variant="filled" icon="refresh" class="refresh_Rental_Server"></mdui-button-icon>
+            <!-- 测试区域 -->
+            </div>
+            
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="选择角色"
+                class="Dialog_Select_Rental">
+                <mdui-select label="选择你要登录的角色名:" id="Dialog_Select_Select_Rental" class="Dialog_Select_Select_Rental">
+                    <mdui-menu-item value="item-1">Item 1</mdui-menu-item>
+                    <mdui-menu-item value="item-2">Item 2</mdui-menu-item>
+                </mdui-select>
+                <div class="Dialog_Select_Button_div_Rental">
+                    <mdui-button-icon variant="filled" icon="add" id="add_name_Rental"></mdui-button-icon>
+                    <mdui-button-icon variant="tonal" icon="auto_fix_high" id="random_add_Rental"></mdui-button-icon>
+                    <mdui-button-icon variant="outlined" icon="delete"></mdui-button-icon>
+                </div>
+                    <mdui-button slot="action" variant="text" id="start_button_Rental" class="start_button_class_Rental">开启代理服务</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="添加角色名"
+                description="add a character name"
+                class="Dialog_Add_Name_Rental">
+                    <mdui-text-field variant="outlined" label="角色名:" class="character_Input_Rental" clearable id="character_Rental"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="character_button_Rental">提交</mdui-button>
+            </mdui-dialog>
+        </div>
+        <div id="shopping" class="page full-height" style="display: none;">
+            <h1 class="Title_Sub">
+                <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                    Shop</span>ping
+            </h1>
+            <div class="shopping_div">
+                <mdui-list class="shopping_list">
+                    <mdui-list-item rounded alignment="start" description="Supporting text">
+                      Headline
+                      <mdui-icon slot="icon" name="people"></mdui-icon>
+                    </mdui-list-item>
+                    <mdui-list-item rounded alignment="center" description="Supporting text">
+                      Headline
+                      <mdui-icon slot="icon" name="people"></mdui-icon>
+                    </mdui-list-item>
+                    <mdui-list-item rounded alignment="end" description="Supporting text">
+                      Headline
+                      <mdui-icon slot="icon" name="people"></mdui-icon>
+                    </mdui-list-item>
+                  </mdui-list>
+            </div>
+            <mdui-dialog
+                close-on-overlay-click
+                headline="确定购买此商品吗？"
+                description="Are you sure to purchase this product?"
+                class="buy_item"
+                >
+                <mdui-button slot="action" variant="text" id="Have_Money">取消</mdui-button>
+                <mdui-button slot="action" variant="tonal" id="Without_Money">确定</mdui-button>
+            </mdui-dialog>
+            <mdui-snackbar closeable placement="bottom-end" class="Quanqian_success">购买成功</mdui-snackbar>
+        </div>
+        <div id="me" class="page full-height" style="display: none;">
+            <h1 class="Title_Sub">
+                <span style="color:rgb(var(--mdui-color-inverse-primary))">
+                    M</span>e
+            </h1>
+                <div class="Me_Information">
+                    
+                </div>
+            <!-- <div class="Me_Information">
+                <mdui-card variant="outlined" class="Me_Information_Card">
+                    <h1 class="Title_Sub_Low_Top">Surise_su</h1>
+                    <mdui-list>
+                        <mdui-list-item headline="权限等级:Admin"></mdui-list-item>
+                        <mdui-list-item headline="账户余额:" description="114514 RB"></mdui-list-item>
+                        <mdui-list-item headline="到期时长:" description="1949-10-1 15:00:00"></mdui-list-item>
+                      </mdui-list>
+                </mdui-card>
+            </div> -->
+            <mdui-dialog
+                stacked-actions
+                close-on-overlay-click
+                headline="激活卡密"
+                description="将你在卡网购买的卡密（EnvisionCharge_开头的）填入到下方的文本框中"
+                class="Activate_Card">
+                    <mdui-text-field variant="outlined" label="卡密:" class="Activate_Input" clearable id="Activate_Input"></mdui-text-field>
+                    <mdui-button slot="action" variant="text" id="Activate_">激活</mdui-button>
+            </mdui-dialog>
+            <mdui-dialog close-on-overlay-click class="Activate_successful">
+                <span slot="headline">激活成功</span>
+                <span slot="description">如余额未发生变化请刷新界面重试</span>
+            </mdui-dialog>
+            <!-- <div class="copyright">
+                © 2019-2024 Surise Software. All Rights Reserved.
+            </div> -->
+            
+        </div>
+
+        <div id="daili" class="page full-height" style="display: none;">
+            <div class="daili_main">
+                <mdui-card variant="outlined" style="width:80%; margin:0 auto; height:auto; padding:20px;">
+                    <mdui-icon name="delete" style="position:absolute; top:10px; right:10px; cursor:pointer;">
+
+                    </mdui-icon>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <div>
+                            <p style="margin: 0; font-size: 18px; font-weight: bold;">角色名: 潜地藻爬</p>
+                            <p style="margin: 0; font-size: 14px; color: gray;">hypc-mc-3line.netease.com:25565</p>
+                        </div>
+                    </div>
+                    <mdui-divider middle></mdui-divider>
+                    <div>
+                        <p style="margin: 5px 0; font-size: 18px;">本地IP:127.0.0.1:25565</p>
+                        <p style="margin: 5px 0; font-size: 14px;">角色ID: 4663063866507047246</p>
+                        <p style="margin: 5px 0; font-size: 14px;">游戏UUID: 01a66f14-9b9c-4c30-9b55-dd57a18a9bd4</p>
+                        <p style="margin: 5px 0; font-size: 14px; ">Token: undefined</p>
+                    </div>
+                </mdui-card>
+                
+            </div>
+            <!-- <div class="copyright">
+                © 2019-2024 Surise Software. All Rights Reserved.
+            </div> -->
+            
+        </div>
+        <mdui-dialog close-on-overlay-click class="Wait_Zha_Pian_User">
+            <span slot="headline">Wait</span>
+            <span slot="description">正在加载数据...请稍等...</span>
+            <mdui-linear-progress></mdui-linear-progress>
+        </mdui-dialog>
+        <mdui-dialog
+                headline="注册成功"
+                description="您已经成功注册至Prisma NEL,现在您可以使用您注册的账号和密码登录,请注意自行妥善保存好自己的账号密码"
+                close-on-overlay-click
+                id="register_success">
+            </mdui-dialog>
+    </div>
+      
+    </div>
+  </div>
+
+  <script>
+    function showPage(pageId) {
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => {
+            page.style.display = 'none';
+        });
+        if (pageId==="me"){
+            displayMeInformation();
+        }else if(pageId==="login"){
+            insertRemarks();
+        }
+        document.getElementById(pageId).style.display = 'block';
+    }
+    const select = document.querySelector(".Account_multiple");
+    console.log(select.value);
+    const example = document.querySelector(".drawer_div");
+    const navigationDrawer = example.querySelector("mdui-navigation-drawer");
+    const openButton = document.querySelector(".open");
+    openButton.addEventListener("click", () => {
+        if (navigationDrawer.open === true){
+            navigationDrawer.open = false;
+        }else{
+            navigationDrawer.open = true;
+        }
+    });
+    showPage("daili");
+    console.log(window.location.host);
+    findOpenPort();
+
+    document.querySelector(".Dialog_Open").addEventListener("click", () => 
+        document.querySelector(".Dialog_Login").open = true
+    );
+    document.getElementById('login_button').addEventListener('click', () => {
+        handleLogin(document.getElementById('login_account').value, document.getElementById('login_password').value);
+        console.log(cache_);
+    });
+    document.getElementById('remark_button').addEventListener('click', () => {
+        // remark_save(document.getElementById('remark').value, cache_account.account, cache_account.password,cache_account.deviceID,cache_account.deviceKey);
+        remark_save(document.getElementById('remark').value);
+    });
+    window.addEventListener('load', function () {
+        document.querySelector('#loading-box').className = 'loaded';
+        setTimeout(function () {
+            document.querySelector('#loading-text').innerHTML = "字体及文件加载可能需要一定时间";
+        }, 3000);
+    });
+
+    document.getElementById('account_login').addEventListener('click', () => {
+        if (money_man==false){
+            const dialog = document.getElementById('register_success');
+            dialog.headline="请先购买时长"
+            dialog.description="未购买时长将无法使用";
+            dialog.open=true;
+            return;
+    }
+        compareAndPost(select.value);
+    });
+    function fetchHitokoto() {
+        const hitokoto = document.querySelector('#hitokoto_text');
+
+        // Fade out
+        hitokoto.style.opacity = '0';
+
+        // Wait for fade-out to complete, then fetch new data
+        setTimeout(() => {
+            fetch('https://v1.hitokoto.cn')
+                .then(response => response.json())
+                .then(data => {
+                    hitokoto.href = `https://hitokoto.cn/?uuid=${data.uuid}`;
+                    hitokoto.innerText = `『${data.hitokoto}』`;
+
+                    // Fade in
+                    hitokoto.style.opacity = '1';
+                })
+                .catch(console.error);
+        }, 500); // Matches the fade-out duration
+    }
+
+    fetchHitokoto();
+    setInterval(fetchHitokoto, 10000);
+    function change(event) {
+        if (event.keyCode === 13) {
+            document.getElementById('Prisma_login_password').focus();
+        }
+    }
+    function clickhere(event) {
+        if (event.keyCode === 13) {
+            document.getElementById('Prisma_Login_button').click();
+        }
+    }
+    document.querySelector('.refresh_Net_Server').addEventListener('click', () => {
+        loadNetworkList();
+    });
+    document.querySelector('.refresh_Rental_Server').addEventListener('click', () => {
+        loadRentalList();
+    });
+    document.getElementById('Without_Money').addEventListener('click', () => {
+        buy_items_true(Cache_item_id);
+    });
+    document.getElementById('Have_Money').addEventListener('click', () => {
+        document.querySelector('.buy_item').open = false;
+    });
+    document.getElementById('add_name').addEventListener('click', () => {
+        open_add_dialog();
+    });
+    document.getElementById('add_name_Rental').addEventListener('click', () => {
+        open_add_dialog_Rental();
+    });
+    document.getElementById('character_button').addEventListener('click', () => {
+        add_net_name(document.getElementById("character").value);
+    });
+    document.getElementById('character_button_Rental').addEventListener('click', () => {
+        add_net_name_Rental(document.getElementById("character_Rental").value);
+    });
+    document.getElementById('random_add').addEventListener('click', () => {
+        random_add();
+    });
+    document.getElementById('start_button').addEventListener('click', () => {
+        sendPostRequest(cache_server_entityID);
+    })
+    document.getElementById('random_add_Rental').addEventListener('click', () => {
+        random_add_Rental();
+    })
+    document.getElementById('start_button_Rental').addEventListener('click', () => {
+        sendPostRequest_Rental(cache_server_entityID);
+    })
+    document.getElementById('Prisma_Login_button').addEventListener('click', () => {
+        Prisma_Login(document.getElementById('Prisma_login_account').value, document.getElementById('Prisma_login_password').value);
+    })
+    document.getElementById('Activate_').addEventListener('click', () => {
+        Activate_CardPress(document.getElementById('Activate_Input').value);
+    })
+    document.getElementById('Prisma_login_button_to_register').addEventListener('click', () => {
+        const dialog=document.querySelector('.Prisma_Register');
+        dialog.open=true;
+        
+    })
+    document.getElementById('Prisma_Register_button_to_login').addEventListener('click', () => {
+        const dialog=document.querySelector('.Prisma_login');
+        dialog.open=true;
+        
+    })
+    
+    document.getElementById('Prisma_register_button').addEventListener('click', () => {
+        const account = document.getElementById('Prisma_Register_account').value;
+        const password = document.getElementById('Prisma_Register_password').value;
+        const email = document.getElementById('Prisma_Register_email').value;
+        const phone = document.getElementById('Prisma_Register_phone').value;
+        const kami = document.getElementById('Prisma_Register_kami').value;
+        const dcname = document.getElementById('Prisma_Register_dcname').value;
+        if (!validateAccount(account)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="用户名格式不正确！要求只允许字母和数字，3~20位";
+            dialog.open=true;
+            return;
+        }
+
+        if (!validatePassword(password)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="密码格式不正确！至少8个字符，包含字母和数字";
+            dialog.open=true;
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="电子邮件格式不正确！";
+            dialog.open=true;
+            return;
+        }
+
+        if (!validatePhone(phone)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="电话号码格式不正确！";
+            dialog.open=true;
+            return;
+        }
+
+        if (!validateKami(kami)) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="注册码不正确！请注意输入的应该是EnvisionRegister_开头的注册码，而非激活码";
+            dialog.open=true;
+            return;
+        }
+
+        if (!dcname) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="注册失败"
+            dialog.description="Discord账号为空，如果没有请随便填";
+            dialog.open=true;
+            return;
+        }
+        Register(account, password, email, phone, kami, dcname);
+    });
+  </script>
+</body>
+</html>
+
