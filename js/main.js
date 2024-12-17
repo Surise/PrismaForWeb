@@ -1491,7 +1491,10 @@ async function sendPostRequest(serverEntity) {
         
         
     } catch (error) {
-        console.error('请求失败:', error);
+        const dialog = document.getElementById('register_success');
+        dialog.headline=`代理开启失败`
+        dialog.description=`${error}`;
+        dialog.open=true;
     }
 }
 let mcversioncache="";
@@ -1533,11 +1536,17 @@ async function fetchMcVersionName(entityID) {
             fetchGameAddress(entityID);
             return versionEntity.name; // 返回版本名称
         } else {
-            throw new Error(`未找到匹配的版本名称，mc_version_id: ${mcVersionId}`);
+            const dialog = document.getElementById('register_success');
+            dialog.headline=`代理开启失败`
+            dialog.description=`未找到匹配的版本名称，mc_version_id: ${mcVersionId}`;
+            dialog.open=true;
         }
 
     } catch (error) {
-        console.error('请求失败:', error);
+        const dialog = document.getElementById('register_success');
+            dialog.headline=`代理开启失败`
+            dialog.description=`${error}`;
+            dialog.open=true;
         return null;
     }
 }
@@ -1568,7 +1577,10 @@ async function fetchGameAddress(serverEntity) {
         console.log('Port:', port); // 输出 Port
         startProxy(serverEntity,mcversioncache , false);
     } catch (error) {
-        console.error('请求失败:', error);
+        const dialog = document.getElementById('register_success');
+            dialog.headline=`代理开启失败`
+            dialog.description=`${error}`;
+            dialog.open=true;
     }
 }
 async function startProxy(serverEntity, versionName, checkbox) {
@@ -1593,7 +1605,10 @@ async function startProxy(serverEntity, versionName, checkbox) {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const dialog = document.getElementById('register_success');
+            dialog.headline=`代理开启失败`
+            dialog.description=`HTTP error! status: ${response.status}`;
+            dialog.open=true;
         }
 
         const result = await response.json(); // 获取响应数据
@@ -1604,6 +1619,10 @@ async function startProxy(serverEntity, versionName, checkbox) {
         console.log('代理启动成功:', result); // 输出成功信息
 
     } catch (error) {
+        const dialog = document.getElementById('register_success');
+            dialog.headline=`代理开启失败`
+            dialog.description=`${error}`;
+            dialog.open=true;
         console.error('请求失败:', error);
     }
     const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
@@ -1742,11 +1761,17 @@ async function fetchMcVersionName_Rental(entityID) {
             fetchGameAddress_Rental(entityID);
             return versionEntity.name; // 返回版本名称
         } else {
-            throw new Error(`未找到匹配的版本名称，mc_version_id: ${mcVersionId}`);
+            const dialog = document.getElementById('register_success');
+            dialog.headline=`代理开启失败`
+            dialog.description=`未找到匹配的版本名称，mc_version_id: ${mcVersionId}`;
+            dialog.open=true;
         }
 
     } catch (error) {
-        console.error('请求失败:', error);
+        const dialog = document.getElementById('register_success');
+        dialog.headline=`代理开启失败`
+        dialog.description=`${error}`;
+        dialog.open=true;
         return null;
     }
 }
@@ -1777,7 +1802,10 @@ async function fetchGameAddress_Rental(serverEntity) {
         console.log('Port:', port); // 输出 Port
         startProxy_Rental(serverEntity,mcversioncache , false);
     } catch (error) {
-        console.error('请求失败:', error);
+        const dialog = document.getElementById('register_success');
+        dialog.headline=`代理开启失败`
+        dialog.description=`${error}`;
+        dialog.open=true;
     }
 }
 async function startProxy_Rental(serverEntity, versionName, checkbox) {
@@ -1813,7 +1841,10 @@ async function startProxy_Rental(serverEntity, versionName, checkbox) {
         console.log('代理启动成功:', result); // 输出成功信息
 
     } catch (error) {
-        console.error('请求失败:', error);
+        const dialog = document.getElementById('register_success');
+        dialog.headline=`代理开启失败`
+        dialog.description=`${error}`;
+        dialog.open=true;
     }
 }
 async function fetchAndDisplayProxies() {
