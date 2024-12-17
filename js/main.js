@@ -28,6 +28,7 @@ async function findOpenPort() {
 
 function main(){
     fetchAndDisplayItems();
+    displayMeInformation();
     fetchAccounts();
     insertRemarks();
     reloadData();
@@ -1464,6 +1465,8 @@ async function loadNetworkList() {
     }
 }
 async function sendPostRequest(serverEntity) {
+    const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+    wait_dialog.open = true;
     const url = 'http://127.0.0.1:'+successfulPort+'/netease/game/join/pre';
     const data = {
         gameId: serverEntity, 
@@ -1594,11 +1597,17 @@ async function startProxy(serverEntity, versionName, checkbox) {
         }
 
         const result = await response.json(); // 获取响应数据
+        const dialog = document.getElementById('register_success');
+            dialog.headline=`${selectedName}  代理开启成功`
+            dialog.description=`代理服务器：${ip}:${port}`;
+            dialog.open=true;
         console.log('代理启动成功:', result); // 输出成功信息
 
     } catch (error) {
         console.error('请求失败:', error);
     }
+    const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+    wait_dialog.open = false;
 }
 function validateAccount(account) {
     const regex = /^[a-zA-Z0-9]{3,20}$/; // 只允许字母和数字
@@ -1797,9 +1806,102 @@ async function startProxy_Rental(serverEntity, versionName, checkbox) {
         }
 
         const result = await response.json(); // 获取响应数据
+        const dialog = document.getElementById('register_success');
+        dialog.headline=`${selectedName_Rental}  代理开启成功`
+        dialog.description=`代理服务器：${ip_Rental}:${port_Rental}`;
+            dialog.open=true;
         console.log('代理启动成功:', result); // 输出成功信息
 
     } catch (error) {
         console.error('请求失败:', error);
     }
+}
+async function fetchAndDisplayProxies() {
+    const url = "http://127.0.0.1:"+successfulPort+"/manager/proxy/list";
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        if (result.code !== 0) {
+            throw new Error(`API returned error: ${result.msg}`);
+        }
+        const data = result.data;
+        const dailiMain = document.querySelector('#daili .daili_main');
+        dailiMain.innerHTML = '';
+        data.forEach(item => {
+            const card = document.createElement('mdui-card');
+            card.setAttribute('variant', 'outlined');
+            card.style.width = '80%';
+            card.style.margin = '0 auto';
+            card.style.height = 'auto';
+            card.style.padding = '20px';
+            card.style.marginTop= '20px';
+            const deleteIcon = document.createElement('mdui-icon');
+            deleteIcon.setAttribute('name', 'delete');
+            deleteIcon.style.position = 'absolute';
+            deleteIcon.style.top = '10px';
+            deleteIcon.style.right = '10px';
+            deleteIcon.style.cursor = 'pointer';
+            deleteIcon.addEventListener('click', () => stopproxy(item.roleID, card));
+            const topSection = document.createElement('div');
+            topSection.style.display = 'flex';
+            topSection.style.alignItems = 'center';
+            topSection.style.marginBottom = '10px';
+            const roleInfo = document.createElement('div');
+            roleInfo.innerHTML = `
+                <p style="margin: 0; font-size: 18px; font-weight: bold;">角色名: ${item.roleName}</p>
+                <p style="margin: 0; font-size: 14px; color: gray;">${item.server}</p>
+            `;
+            topSection.appendChild(roleInfo);
+            const divider = document.createElement('mdui-divider');
+            divider.setAttribute('middle', '');
+            const contentSection = document.createElement('div');
+            contentSection.innerHTML = `
+                <p style="margin: 5px 0; font-size: 18px;">本地IP: 127.0.0.1:${item.port}</p>
+                <p style="margin: 5px 0; font-size: 14px;">角色ID: ${item.roleID}</p>
+                <p style="margin: 5px 0; font-size: 14px;">游戏UUID: ${item.roleGameUUID}</p>
+                <p style="margin: 5px 0; font-size: 14px;">Token: ${item.neteaseToken}</p>
+            `;
+            card.appendChild(deleteIcon);
+            card.appendChild(topSection);
+            card.appendChild(divider);
+            card.appendChild(contentSection);
+            dailiMain.appendChild(card);
+        });
+    } catch (error) {
+        console.error("Error fetching or processing proxy data:", error);
+    }
+}
+function stopproxy(roleID, cardElement) {
+    console.log(`Stopping proxy for roleID: ${roleID}`);
+    fetch(`http://127.0.0.1:${successfulPort}/netease/game/proxy/stop`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ roleID }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to stop proxy for roleID: ${roleID}`);
+            }
+            return response.json();
+        })
+        .then(result => {
+            if (result.code !== 0) {
+                throw new Error(`Error from server: ${result.msg}`);
+            }
+            cardElement.classList.add('fade-out');
+            cardElement.addEventListener('animationend', () => {
+                cardElement.remove();
+            });
+            console.log(`Proxy stopped successfully for roleID: ${roleID}`);
+            fetchAndDisplayProxies();
+        })
+        .catch(error => {
+            console.error("Error stopping proxy:", error);
+        });
 }

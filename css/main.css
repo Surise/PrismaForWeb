@@ -378,4 +378,18 @@ mdui-card p {
 }
 .Dialog_Select_Select_Rental{
   width: 30rem;
+}/* 定义删除动画 */
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+      transform: scale(1);
+  }
+  to {
+      opacity: 0;
+      transform: scale(0.9);
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
 }

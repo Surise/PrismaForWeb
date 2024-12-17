@@ -407,30 +407,9 @@
         <div id="daili" class="page full-height" style="display: none;">
             <div class="daili_main">
                 <mdui-card variant="outlined" style="width:80%; margin:0 auto; height:auto; padding:20px;">
-                    <mdui-icon name="delete" style="position:absolute; top:10px; right:10px; cursor:pointer;">
-
-                    </mdui-icon>
-
-                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                        <div>
-                            <p style="margin: 0; font-size: 18px; font-weight: bold;">角色名: 潜地藻爬</p>
-                            <p style="margin: 0; font-size: 14px; color: gray;">hypc-mc-3line.netease.com:25565</p>
-                        </div>
-                    </div>
-                    <mdui-divider middle></mdui-divider>
-                    <div>
-                        <p style="margin: 5px 0; font-size: 18px;">本地IP:127.0.0.1:25565</p>
-                        <p style="margin: 5px 0; font-size: 14px;">角色ID: 4663063866507047246</p>
-                        <p style="margin: 5px 0; font-size: 14px;">游戏UUID: 01a66f14-9b9c-4c30-9b55-dd57a18a9bd4</p>
-                        <p style="margin: 5px 0; font-size: 14px; ">Token: undefined</p>
-                    </div>
+                    <h1 class="Title_Sub_No_Header">您还未开启代理服务</h1>
                 </mdui-card>
-                
             </div>
-            <!-- <div class="copyright">
-                © 2019-2024 Surise Software. All Rights Reserved.
-            </div> -->
-            
         </div>
         <mdui-dialog close-on-overlay-click class="Wait_Zha_Pian_User">
             <span slot="headline">Wait</span>
@@ -458,6 +437,8 @@
             displayMeInformation();
         }else if(pageId==="login"){
             insertRemarks();
+        }else if(pageId==="daili"){
+            fetchAndDisplayProxies();
         }
         document.getElementById(pageId).style.display = 'block';
     }
@@ -473,7 +454,7 @@
             navigationDrawer.open = true;
         }
     });
-    showPage("daili");
+    showPage("home");
     console.log(window.location.host);
     findOpenPort();
 
@@ -527,7 +508,7 @@
     }
 
     fetchHitokoto();
-    setInterval(fetchHitokoto, 10000);
+    setInterval(fetchHitokoto, 180000);
     function change(event) {
         if (event.keyCode === 13) {
             document.getElementById('Prisma_login_password').focus();
