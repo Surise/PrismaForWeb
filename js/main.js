@@ -567,6 +567,9 @@ function handleLogin(account, password,deviceID = null, deviceKey = null) {
 function gotobuy(){
     window.open("https://shop.prisma.today");
 }
+function useold(){
+    window.open("k.html");
+}
 function remark_save(remark) {
     let url;
     let data;
