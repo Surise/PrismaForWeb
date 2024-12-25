@@ -568,7 +568,7 @@ function gotobuy(){
     window.open("https://shop.prisma.today");
 }
 function useold(){
-    window.open("k.html");
+    window.open("old/index.html");
 }
 function remark_save(remark) {
     let url;
