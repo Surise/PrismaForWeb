@@ -1630,7 +1630,7 @@ async function startProxy(serverEntity, versionName, checkbox) {
         gameVersion: versionName,
         serverIp: ip, // 使用全局变量 ip
         serverPort: port, // 使用全局变量 port
-        useProxy:false// 根据复选框状态设置
+        useProxy:document.getElementById("dlip").checked// 根据复选框状态设置
     };
 
     try {

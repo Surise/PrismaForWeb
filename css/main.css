@@ -359,6 +359,14 @@ mdui-card p {
   gap: 10px;               /* 按钮之间的间距，可根据需要调整 */
   height: 100%;            /* 可选：让容器的高度和父元素相同 */
 }
+.Dialog_danxuan_div{
+  margin-right:auto
+}
+.Title_Sub_Z{
+  font-style: normal;
+    font-size: 1rem; /* Change font size */
+    color:rgb(var(--mdui-color-on-surface-variant));
+}
 .start_button_class{
   margin-top: 0;
 }

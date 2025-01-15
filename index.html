@@ -387,6 +387,10 @@
                     <mdui-menu-item value="item-2">Item 2</mdui-menu-item>
                 </mdui-select>
                 <div class="Dialog_Select_Button_div">
+                    <h1 class="Title_Sub_Z">
+                        开启代理IP绕IPBan
+                    </h1>
+                    <mdui-switch class="Dialog_danxuan_div" id="dlip">使用代理IP</mdui-switch>
                     <mdui-button-icon variant="filled" icon="add" id="add_name"></mdui-button-icon>
                     <mdui-button-icon variant="tonal" icon="auto_fix_high" id="random_add"></mdui-button-icon>
                     <mdui-button-icon variant="outlined" icon="delete"></mdui-button-icon>
@@ -607,6 +611,7 @@
   </div>
 
   <script>
+    
     function showPage(pageId) {
         const pages = document.querySelectorAll('.page');
         pages.forEach(page => {
