@@ -8,6 +8,7 @@
   <br/>
   <a href="https://sbzone.振华锻造.中国"><strong>官网</strong></a>
   <br/>
+  <a href="https://shop.prisma.today"><strong>官方卡网</strong></a>
 </p>
 
 <hr/>
