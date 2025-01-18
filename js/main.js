@@ -1574,6 +1574,12 @@ async function fetchMcVersionName(entityID) {
             fetchGameAddress(entityID);
             return versionEntity.name; // 返回版本名称
         } else {
+            if (mcVersionId==="12"){
+                console.log("1.8.9");
+                mcversioncache="1.8.9";
+                fetchGameAddress(entityID);
+                return "1.8.9"; // 返回版本名称
+            };
             const dialog = document.getElementById('register_success');
             dialog.headline=`代理开启失败`
             dialog.description=`未找到匹配的版本名称，mc_version_id: ${mcVersionId}`;
