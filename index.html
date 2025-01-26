@@ -164,7 +164,7 @@
             <h1 class="Title_Sub">一个平平无奇基于网易我的世界的网页版启动器</h1>
             
             <div class="Title_Button_Big">
-                <mdui-button variant="elevated" class="Big_Button" onclick="useold()">使用旧版</mdui-button>
+                <mdui-button variant="elevated" class="Big_Button" onclick="useold()">更新日志</mdui-button>
                 <mdui-button variant="filled" class="Big_Button" onclick="checkAuthStatus_lite()">开始使用</mdui-button>
                 <mdui-button variant="tonal" class="Big_Button" onclick="gotobuy()">购买卡密</mdui-button>
             </div>
@@ -213,7 +213,6 @@
 //    ````':.          ':::::::::'                  ::::..
 //                       '.:::::'                    ':'````..
 // -->
-
             <mdui-dialog close-on-overlay-click class="Localserver_Error">
                 <span slot="headline">并未检测到Localserver存在</span>
                 <span slot="description">请确定您的Localserver（本地服务端）已启动且显示LocalServer Ready...<br>如找不到LocalServer请前往售后群下载或咨询对应卡网负责人</span>
@@ -261,13 +260,13 @@
                 </div>
             </mdui-dialog> -->
             <mdui-dialog
-                stacked-actions
                 close-on-overlay-click
                 headline="登录账号"
                 class="Dialog_Login">
                     <mdui-text-field variant="outlined" label="账号:" class="Login_Input" clearable id="login_account"></mdui-text-field>
                     <mdui-text-field variant="outlined" label="密码:" class="Login_Input" clearable id="login_password"></mdui-text-field>
-                    <mdui-button slot="action" variant="text" id="login_button">登录</mdui-button>
+                    <mdui-button slot="action" variant="text" id="use_Phone">验证码登录</mdui-button>
+                    <mdui-button slot="action" variant="tonal" id="login_button">登录</mdui-button>
             </mdui-dialog>
             <mdui-dialog
                 stacked-actions
@@ -308,7 +307,7 @@
 
              <div class="Netease_Login_Button_List">
                 <mdui-button-icon variant="filled" icon="add" class="Dialog_Open"></mdui-button-icon>
-                <mdui-button-icon variant="filled" icon="auto_fix_high"></mdui-button-icon>
+                <mdui-button-icon variant="filled" icon="auto_fix_high" id="Random_Login"></mdui-button-icon>
                 <mdui-button-icon variant="filled" icon="delete"></mdui-button-icon>
                 <mdui-button-icon variant="tonal" icon="more_vert"></mdui-button-icon>
              </div>
@@ -605,9 +604,41 @@
                 close-on-overlay-click
                 id="register_success">
             </mdui-dialog>
+            <mdui-dialog
+                headline="请输入验证码"
+                description="睁大你的眼睛看看这是什么"
+                close-on-overlay-click
+                id="yzm">
+                <img src="" alt="验证码" id="yzm_img" style="width: 100%; height: auto;">
+                <mdui-text-field variant="outlined" label="验证码:" class="Login_Input" clearable id="yzm_input"></mdui-text-field>
+                <mdui-button slot="action" variant="filled" id="login_button_yzm">提交</mdui-button>
+            </mdui-dialog>
+        <mdui-dialog
+            headline="更新日志"
+            description="Update Log"
+            close-on-overlay-click
+            id="update_success">
+            -添加手机号登录功能<br>
+            -添加手机号验证码登录<br>
+            -添加随机网易账号登录<br>
+            -修复4399登录失败
+        </mdui-dialog>
     </div>
       
     </div>
+    <mdui-dialog
+        id="Phone"
+        stacked-actions
+        close-on-overlay-click
+        headline="请输入手机验证码"
+        description="我们并不会收取您的手机信息，本网站完全开源，可自行查看源代码https://github.com/Surise/PrismaForWeb">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <mdui-text-field variant="outlined" label="手机号:" class="Login_Input" clearable id="Phone_account"></mdui-text-field>
+            <mdui-button style="margin-top: 2%;" variant="tonal" id="smssend">发送验证码</mdui-button>
+        </div>
+        <mdui-text-field variant="outlined" label="验证码:" class="Login_Input" clearable id="Phone_Verification"></mdui-text-field>
+        <mdui-button slot="action" variant="filled" id="login_button_Phone">登录</mdui-button>
+    </mdui-dialog>
   </div>
 
   <script>
@@ -755,6 +786,22 @@
     document.getElementById('add_name_Rental').addEventListener('click', () => {
         open_add_dialog_Rental();
     });
+    document.getElementById('login_button_yzm').addEventListener('click', () => {
+        handleLogin_4399(document.getElementById('yzm_input').value);
+    });
+    document.getElementById('use_Phone').addEventListener('click', () => {
+        const dialog=document.querySelector('.Dialog_Login');
+        dialog.open=false;
+        const dg=document.getElementById('Phone');
+        dg.open=true;
+    });
+    document.getElementById('login_button_Phone').addEventListener('click', () => {
+        Phone_Login(document.getElementById('Phone_Verification').value);
+    });
+    document.getElementById('smssend').addEventListener('click', () => {
+        sendSMS(document.getElementById('Phone_account').value);
+        console.log(document.getElementById('Phone_account').value);
+    });
     document.getElementById('character_button').addEventListener('click', () => {
         add_net_name(document.getElementById("character").value);
     });
@@ -788,7 +835,11 @@
         const dialog=document.querySelector('.Prisma_login');
         dialog.open=true;
     })
-    
+    document.getElementById("Random_Login").addEventListener('click', () => {
+        const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+    wait_dialog.open = true;
+        Random_Login();
+    })
     document.getElementById('Prisma_register_button').addEventListener('click', () => {
         const account = document.getElementById('Prisma_Register_account').value;
         const password = document.getElementById('Prisma_Register_password').value;

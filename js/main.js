@@ -4,9 +4,8 @@ async function checkPort(port) {
         if (response.ok) {
             return port; // 返回成功的端口号
         }
-        throw new Error(`Port ${port} not available`);
     } catch (error) {
-        throw new Error(`Port ${port} not accessible`); // 显式抛出错误
+
     }
 }
 //                        d*##$.
@@ -516,9 +515,11 @@ async function buy_items_true(itemId) {
         console.error('Error fetching wallet balance:', error);
     }
 }
-
+let cache_4399_yzm_acc="";
+let cache_4399_yzm_pass="";
+let cache_4399_yzm_yzm="";
 let cache_;
-function handleLogin(account, password,deviceID = null, deviceKey = null) {
+async function handleLogin(account, password,deviceID = null, deviceKey = null) {
     let url;
     let data;
     let model;
@@ -531,7 +532,23 @@ function handleLogin(account, password,deviceID = null, deviceKey = null) {
         url = 'http://127.0.0.1:'+successfulPort+'/netease/auth/offical';
         data = JSON.stringify({ account: account, password: password,deviceID:deviceID, deviceKey:deviceKey });
         model=163;
-    } else {
+    } else if (isPhoneNumber(account)) {
+        url = 'http://127.0.0.1:'+successfulPort+'/netease/auth/phone/login';
+        data = JSON.stringify({ phone: account, password: password,deviceID:deviceID, deviceKey:deviceKey });
+        model=110;
+    }
+    else {
+        cache_4399_yzm_yzm=await test_4399(account);
+        console.log(cache_4399_yzm_yzm);
+        if(cache_4399_yzm_yzm!="SBZONE"){
+            const yzmImg = document.getElementById('yzm_img');
+            yzmImg.src = cache_4399_yzm_yzm;
+            const dialog = document.getElementById('yzm');
+            dialog.open = true;
+            cache_4399_yzm_acc=account;
+            cache_4399_yzm_pass=password;
+            return ;
+        }
         url = 'http://127.0.0.1:'+successfulPort+'/netease/auth/4399';
         data = JSON.stringify({ account: account, password: password });
         model=4399;
@@ -551,12 +568,19 @@ function handleLogin(account, password,deviceID = null, deviceKey = null) {
         cache_deviceID=return_data_data.deviceID;
         cache_deviceKey=return_data_data.deviceKey;
         if (return_data.code == 0) {
-            cache_=JSON.stringify({ account: account, password: password,deviceID:cache_deviceID, deviceKey:cache_deviceKey })
+            cache_=JSON.stringify({ account: account, password: password})
             document.querySelector(".Dialog_Login").open = false;
             const dialog = document.querySelector(".Dialog_Login_Success");
             dialog.open = true;
             insertRemarks();
+            reloadData();
+            const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+            wait_dialog.open = false;
         } else {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="登录失败"
+            dialog.description=return_data.msg;
+            dialog.open=true;
             console.error('Login failed:'+return_data.msg);
         } 
     })
@@ -564,12 +588,91 @@ function handleLogin(account, password,deviceID = null, deviceKey = null) {
         console.error('Error:', error);
     });
 }
+function handleLogin_4399(yzm) {
+    url = 'http://127.0.0.1:'+successfulPort+'/netease/auth/4399';
+    data = JSON.stringify({ account: cache_4399_yzm_acc, password: cache_4399_yzm_pass,captcha:yzm,captchaSession:extractCaptchaId(cache_4399_yzm_yzm) });
+    model=4399;
+    console.log(url, data);
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'accept': 'text/plain',
+            'Content-Type': 'application/json'
+        },
+        body: data
+    })
+    .then(response => response.json())
+    .then(return_data => {
+        if (return_data.code == 0) {
+            cache_=JSON.stringify({ account: cache_4399_yzm_acc, password: cache_4399_yzm_pass})
+            document.getElementById("yzm").open = false;
+            const dialog = document.querySelector(".Dialog_Login_Success");
+            dialog.open = true;
+            insertRemarks();
+            reloadData();
+            const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+            wait_dialog.open = false;
+        } else {
+            const dialog = document.getElementById('register_success');
+            dialog.headline="登录失败"
+            dialog.description=return_data.msg;
+            dialog.open=true;
+            console.error('Login failed:'+return_data.msg);
+        } 
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+    document.getElementById("yzm").open = false;
+    const wait_dialog = document.querySelector('.Wait_Zha_Pian_User');
+            wait_dialog.open = false;
+}
 function gotobuy(){
     window.open("https://shop.prisma.today");
 }
 function useold(){
-    window.open("old/index.html");
+    const dialog = document.getElementById('update_success');
+        dialog.open=true;
 }
+
+async function test_4399(account) {
+    try {
+        // 构建请求 URL
+        const url = 'http://127.0.0.1:' + successfulPort + '/netease/auth/4399/pre';
+        
+        // 构建请求体
+        const requestBody = {
+            account: account
+        };
+
+        // 发送 POST 请求
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+        });
+
+        // 解析返回的 JSON 数据
+        const data = await response.json();
+        console.log(data);
+        // 判断返回的 msg 字段并返回对应的结果
+        if (data.msg === "need captcha") {
+            return data.data;  // 返回 captcha 的 URL
+        } else {
+            return "SBZONE";  // 如果 msg 不是 "need captcha"
+        }
+    } catch (error) {
+        // 处理错误（例如网络问题或解析问题）
+        console.error("请求失败:", error);
+        return "错误发生";
+    }
+}
+
+
+  
+
 function remark_save(remark) {
     let url;
     let data;
@@ -590,7 +693,12 @@ function remark_save(remark) {
         console.log(cache_account.deviceID);
         data = JSON.stringify({ remark:remark, account: cache_account.account, password: cache_account.password,deviceID:cache_account.deviceID, deviceKey:cache_account.deviceKey });
         model=163;
-    } else {
+    } else if (isPhoneNumber(cache_account.account)) {
+        url = 'http://127.0.0.1:'+successfulPort+'/phone/add';
+        data = JSON.stringify({ remark:remark, account: cache_account.account, password: cache_account.password });
+        model=110;
+    }
+     else {
         url = 'http://127.0.0.1:'+successfulPort+'/4399/add';
         data = JSON.stringify({ remark:remark, account: cache_account.account, password: cache_account.password });
         model=4399;
@@ -628,7 +736,7 @@ function reloadData() {
             console.error('Error:', data.msg);
         }
     } catch (error) {
-        console.error('Failed to fetch reload data:', error);
+        console.log("测试数据不必理会：",error);
     }
 }
 
@@ -641,10 +749,25 @@ async function fetchOfficialData() {
         if (data.code === 0) {
             officialData = data.data;
         } else {
-            console.error('Failed to fetch official data:', data.msg);
+            console.log('邮箱登录缓存账号为空', data.msg);
         }
     } catch (error) {
-        console.error('Failed to fetch official data:', error);
+        console.log('邮箱登录缓存账号为空', error);
+    }
+}
+let PhoneData = [];
+async function fetchPhoneData() {
+    try {
+        const response = await fetch('http://127.0.0.1:'+successfulPort+'/phone/get');
+        const data = await response.json();
+
+        if (data.code === 0) {
+            PhoneData = data.data;
+        } else {
+            console.log('手机号登录缓存账号为空', data.msg);
+        }
+    } catch (error) {
+        console.log('手机号登录缓存账号为空', error);
     }
 }
 
@@ -657,10 +780,10 @@ async function fetch4399Data() {
         if (data.code === 0) {
             data4399 = data.data;
         } else {
-            console.error('Failed to fetch 4399 data:', data.msg);
+            console.log('4399登录缓存账号为空', data.msg);
         }
     } catch (error) {
-        console.error('Failed to fetch 4399 data:', error);
+        console.log('4399登录缓存账号为空', error);
     }
 }
 
@@ -673,17 +796,17 @@ async function fetchSauthData() {
         if (data.code === 0) {
             sauthData = data.data;
         } else {
-            console.error('Failed to fetch sauth data:', data.msg);
+            console.log('Sauth登录缓存账号为空', data.msg);
         }
     } catch (error) {
-        console.error('Failed to fetch sauth data:', error);
+        console.log('Sauth登录缓存账号为空', error);
     }
 }
 let combinedData=[];
 async function insertRemarks() {
-    await Promise.all([fetchOfficialData(), fetch4399Data(), fetchSauthData()]);
+    await Promise.all([fetchOfficialData(), fetch4399Data(), fetchSauthData(),fetchPhoneData()]);
 
-    combinedData = [...officialData, ...data4399, ...sauthData];
+    combinedData = [...officialData, ...data4399, ...sauthData,...PhoneData];
 
     const selectElement = document.querySelector('.Account_multiple');
     selectElement.innerHTML = '';
@@ -801,7 +924,7 @@ async function fetchAccounts() {
             });
         }
     } catch (error) {
-        console.error('Error fetching accounts:', error);
+        console.log('当前没有开启的代理服务', error);
     }
 }
 
@@ -1979,4 +2102,123 @@ function stopproxy(roleID, cardElement) {
         .catch(error => {
             console.error("Error stopping proxy:", error);
         });
+}
+function createGUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+async function Random_Login_Get() {
+    try {
+      const response = await fetch('http://127.0.0.1:'+successfulPort+'/func/alt/get');
+      const data = await response.json();
+      if (data.code === 0 && data.data) {
+        const { account, password } = data.data;
+        return { account, password };
+      } else {
+        throw new Error('Invalid data structure');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      return null;
+    }
+  }
+function Random_Login(){
+    Random_Login_Get().then(result => {
+        if (result) {
+          console.log('Account:', result.account);
+          console.log('Password:', result.password);
+          handleLogin(result.account, result.password);
+        } else {
+          console.log('Failed to retrieve data.');
+        }
+      });
+  }
+  async function sendSMS(phone) {
+    try {
+      const body = JSON.stringify({ phone });
+      const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/auth/sms/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      });
+      if (response.ok) {
+        console.log('SMS sent successfully!');
+        const smsButton = document.getElementById('smssend');
+        smsButton.disabled = true;
+        smsButton.setAttribute('loading', '');
+        let countdown = 60;
+        const updateButtonText = () => {
+            smsButton.textContent = `等待${countdown}s`;
+        };
+        const interval = setInterval(() => {
+            countdown--;
+            updateButtonText();
+            if (countdown <= 0) {
+            clearInterval(interval);
+            smsButton.textContent = '发送验证码';
+            smsButton.disabled = false;
+            smsButton.removeAttribute('loading');
+            }
+        }, 1000);
+        updateButtonText();
+        return true;
+      } else {
+        console.error(`Failed to send SMS. Status: ${response.status}`);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      return false;
+    }
+  }
+  async function Phone_Login(code) {
+    try {
+      const body = JSON.stringify({ code });
+      const response = await fetch('http://127.0.0.1:'+successfulPort+'/netease/auth/sms/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Data:', data);
+        if (data.code === 0) {
+            const dialog = document.getElementById('register_success');
+            dialog.headline=`登陆成功`
+            dialog.description=`六百六十六`;
+            dialog.open=true;
+        }
+        return data.msg;
+      } else {
+        const dialog = document.getElementById('register_success');
+            dialog.headline=`登陆失败`
+            dialog.description=`${data.msg}`;
+            dialog.open=true;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      return null;
+    }
+  }
+  function isPhoneNumber(str) {
+    const regex = /^1[3-9]\d{9}$/;
+    return regex.test(str);
+  }
+  
+  function extractCaptchaId(url) {
+    const regex = /captchaId=([a-zA-Z0-9]+)/;
+    const match = url.match(regex);
+    if (match) {
+        return match[1];
+    } else {
+        return null;
+    }
 }
