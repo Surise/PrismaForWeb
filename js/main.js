@@ -995,6 +995,8 @@ async function opendialog(entityId) {
             },
             body: JSON.stringify(requestData)
         });
+        selectedEntityId = '';
+        selectedName = '';
 
         const data = await response.json();
 
@@ -1002,18 +1004,16 @@ async function opendialog(entityId) {
             namesList = data.data
                 .filter(item => item.expire_time === 0)
                 .map(item => ({ name: item.name, entity_id: item.entity_id }));
-
             const selectElement = document.querySelector(".Dialog_Select_Select");
-
+            selectElement.textContent = '请先选择角色';
             selectElement.innerHTML = '';
-
+            selectElement.value = '请先选择角色';
             namesList.forEach(({ name, entity_id }) => {
                 const option = document.createElement('mdui-menu-item');
                 option.setAttribute('value', entity_id);
                 option.textContent = name;
                 selectElement.appendChild(option);
             });
-
             // 添加事件监听器以设置全局变量
             selectElement.addEventListener('change', (event) => {
                 selectedEntityId = event.target.value; // 获取选中的 entity_id
@@ -1021,7 +1021,6 @@ async function opendialog(entityId) {
                 console.log('选中的角色 entity_id:', selectedEntityId);
                 console.log('选中的角色名称:', selectedName); // 打印角色名称
             });
-
             // 打开对话框
             const dialog = document.querySelector(".Dialog_Select");
             dialog.open = true;
@@ -1654,7 +1653,7 @@ async function sendPostRequest(serverEntity) {
     } catch (error) {
         const dialog = document.getElementById('register_success');
         dialog.headline=`代理开启失败`
-        dialog.description=`${error}`;
+        dialog.description=`自行检查是否开启了代理IP（在你账号没有余额的情况下），刷新网页可以解决${error}`;
         dialog.open=true;
     }
 }
@@ -1712,7 +1711,7 @@ async function fetchMcVersionName(entityID) {
     } catch (error) {
         const dialog = document.getElementById('register_success');
             dialog.headline=`代理开启失败`
-            dialog.description=`${error}`;
+            dialog.description=`自行检查是否开启了代理IP（在你账号没有余额的情况下），刷新网页可以解决${error}`;
             dialog.open=true;
         return null;
     }
@@ -1746,7 +1745,7 @@ async function fetchGameAddress(serverEntity) {
     } catch (error) {
         const dialog = document.getElementById('register_success');
             dialog.headline=`代理开启失败`
-            dialog.description=`${error}`;
+            dialog.description=`自行检查是否开启了代理IP（在你账号没有余额的情况下），刷新网页可以解决${error}`;
             dialog.open=true;
     }
 }
@@ -1757,9 +1756,9 @@ async function startProxy(serverEntity, versionName, checkbox) {
         roleId: selectedEntityId,
         roleName: selectedName,
         gameVersion: versionName,
-        serverIp: ip, // 使用全局变量 ip
-        serverPort: port, // 使用全局变量 port
-        useProxy:document.getElementById("dlip").checked// 根据复选框状态设置
+        serverIp: ip,
+        serverPort: port,
+        useProxy:document.getElementById("dlip").checked
     };
 
     try {
@@ -1788,7 +1787,7 @@ async function startProxy(serverEntity, versionName, checkbox) {
     } catch (error) {
         const dialog = document.getElementById('register_success');
             dialog.headline=`代理开启失败`
-            dialog.description=`${error}`;
+            dialog.description=`自行检查是否开启了代理IP（在你账号没有余额的情况下），刷新网页可以解决${error}`;
             dialog.open=true;
         console.error('请求失败:', error);
     }
@@ -1937,7 +1936,7 @@ async function fetchMcVersionName_Rental(entityID) {
     } catch (error) {
         const dialog = document.getElementById('register_success');
         dialog.headline=`代理开启失败`
-        dialog.description=`${error}`;
+        dialog.description=`自行检查是否开启了代理IP（在你账号没有余额的情况下），刷新网页可以解决${error}`;
         dialog.open=true;
         return null;
     }
@@ -1971,7 +1970,7 @@ async function fetchGameAddress_Rental(serverEntity) {
     } catch (error) {
         const dialog = document.getElementById('register_success');
         dialog.headline=`代理开启失败`
-        dialog.description=`${error}`;
+        dialog.description=`自行检查是否开启了代理IP（在你账号没有余额的情况下），刷新网页可以解决${error}`;
         dialog.open=true;
     }
 }
@@ -2010,7 +2009,7 @@ async function startProxy_Rental(serverEntity, versionName, checkbox) {
     } catch (error) {
         const dialog = document.getElementById('register_success');
         dialog.headline=`代理开启失败`
-        dialog.description=`${error}`;
+        dialog.description=`自行检查是否开启了代理IP（在你账号没有余额的情况下），刷新网页可以解决${error}`;
         dialog.open=true;
     }
 }
@@ -2191,6 +2190,8 @@ function Random_Login(){
         const data = await response.json();
         console.log('Data:', data);
         if (data.code === 0) {
+            const dg = document.getElementById('Phone');
+            dg.open=false;
             const dialog = document.getElementById('register_success');
             dialog.headline=`登陆成功`
             dialog.description=`六百六十六`;
