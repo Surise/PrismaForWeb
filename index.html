@@ -7,6 +7,7 @@
   <script src="mdui/mdui.global.js"></script>
   <script src="./js/main.js"></script>
 
+
   <!-- #                      d*##$.
 # zP"""""$e.           $"    $o
 #4$       '$          $"      $
@@ -146,6 +147,140 @@
 
     <div style="height: calc(100vh - 64px);">
         <!-- 主页面在他妈这里开始 -->
+        <mdui-tooltip content="下载日志" trigger-element="#my-button">
+            <mdui-fab icon="download" id="download_button" style="position: fixed;right: 20px;top: 50%;transform: translateY(-50%);z-index: 1000;"></mdui-fab>
+        </mdui-tooltip>
+        <script>
+                const errorData = {
+      errors: [],
+      networkRequests: []
+    };
+    
+    window.onerror = function(message, source, lineno, colno, error) {
+      errorData.errors.push({
+        message,
+        source,
+        lineno,
+        colno,
+        error: error?.stack || ''
+      });
+      return false;
+    };
+    
+    window.onunhandledrejection = function(event) {
+      errorData.errors.push({
+        type: 'UnhandledPromiseRejection',
+        reason: event.reason?.stack || event.reason
+      });
+    };
+    
+    const originalXHROpen = XMLHttpRequest.prototype.open;
+    const originalXHRSend = XMLHttpRequest.prototype.send;
+    
+    XMLHttpRequest.prototype.open = function(method, url) {
+      this._requestDetails = {
+        method,
+        url,
+        headers: {},
+        startTime: Date.now()
+      };
+      originalXHROpen.apply(this, arguments);
+    };
+    
+    XMLHttpRequest.prototype.send = function(body) {
+      const xhr = this;
+      const requestEntry = {
+        type: 'XHR',
+        method: xhr._requestDetails.method,
+        url: xhr._requestDetails.url,
+        requestHeaders: xhr._requestDetails.headers,
+        requestBody: body,
+        status: 0,
+        response: null,
+        duration: 0
+      };
+    
+      xhr.addEventListener('loadend', function() {
+        requestEntry.status = xhr.status;
+        requestEntry.response = xhr.response;
+        requestEntry.duration = Date.now() - xhr._requestDetails.startTime;
+        errorData.networkRequests.push(requestEntry);
+      });
+    
+      originalXHRSend.call(xhr, body);
+    };
+    
+    const originalFetch = window.fetch;
+    window.fetch = async function(input, init) {
+      const startTime = Date.now();
+      const requestEntry = {
+        type: 'Fetch',
+        url: typeof input === 'string' ? input : input.url,
+        method: (init?.method || 'GET').toUpperCase(),
+        requestHeaders: init?.headers || {},
+        requestBody: init?.body,
+        status: 0,
+        response: null,
+        duration: 0
+      };
+    
+      try {
+        const response = await originalFetch(input, init);
+        requestEntry.status = response.status;
+        requestEntry.response = await response.clone().json().catch(() => null);
+        requestEntry.duration = Date.now() - startTime;
+        errorData.networkRequests.push(requestEntry);
+        return response;
+      } catch (error) {
+        requestEntry.error = error.toString();
+        errorData.networkRequests.push(requestEntry);
+        throw error;
+      }
+    };
+            document.getElementById('download_button').addEventListener('click', () => {
+              const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+              const filename = `把这个文件发给群主-PrismaReport-${timestamp}.json`;
+              
+              const reportData = {
+                systemInfo: {
+                  timestamp: new Date().toISOString(),
+                  userAgent: navigator.userAgent,
+                  url: window.location.href
+                },
+                networkRequests: errorData.networkRequests.map(req => ({
+                  "请求api": req.url,
+                  "请求方法": req.method,
+                  "携带内容": {
+                    headers: req.requestHeaders,
+                    body: req.requestBody
+                  },
+                  "返回数据": req.response,
+                  "状态代码": req.status,
+                  "请求耗时(ms)": req.duration,
+                  "错误信息": req.error || null
+                })),
+                errors: errorData.errors.map(err => ({
+                  "错误类型": err.type || 'JavaScript Error',
+                  "错误信息": err.message || err.reason,
+                  "错误来源": err.source || '未知',
+                  "行号": err.lineno || '未知',
+                  "列号": err.colno || '未知',
+                  "堆栈追踪": err.error || err.reason?.stack || '无'
+                }))
+              };
+            
+              const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = filename;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            });
+            </script>
          <div class="copyright">
                 <p id="hitokoto">
                     <p id="hitokoto_text">:D 获取中...</p><br>
