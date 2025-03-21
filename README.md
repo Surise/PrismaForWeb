@@ -4,11 +4,8 @@
 <h1 align="center">Prisma NEL</h1>
 
 <p align="center">
-  A third-party launcher for NetEase Minecraft, co-produced by Surise and Liunian.
+  完全开源，不以盈利为目的，仅供学习研究，请仔细辨别，并在下载后24小时内删除，如有纠纷请立即联系我，我将立刻删除
   <br/>
-  <a href="https://sbzone.振华锻造.中国"><strong>官网</strong></a>
-  <br/>
-  <a href="https://shop.prisma.today"><strong>官方卡网</strong></a>
 </p>
 
 <hr/>
@@ -28,5 +25,4 @@ https://github.com/Surise/PrismaForWeb.git
 
 ## License
 
-[MIT](https://prisma.today/privacy.html)
 
